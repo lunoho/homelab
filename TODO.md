@@ -1,52 +1,37 @@
 # Homelab TODO
 
-## Installation ✅
-- [x] Download NixOS ISO
-- [x] Create bootable USB drive
-- [x] Boot NUC from USB and install NixOS
-- [x] Format partitions and mount filesystems
-- [x] Generate NixOS configuration
-- [x] Install NixOS system
-- [x] Set root password and reboot
-- [x] Configure user accounts and cleanup
+## Current: Test & Deploy Infrastructure
+- [ ] Test Traefik configuration locally
+- [ ] Configure DDNS with UDM Pro → Linode DNS
+- [ ] Set up port forwarding (80/443)
+- [ ] Test external HTTPS access
 
-## Configuration Management ✅
-- [x] Set up Git repository for NixOS configuration
-- [x] Create modular NixOS configuration structure  
-- [x] Configure SSH keys in NixOS config
-- [x] Set up symlinked configuration files
-- [x] Add essential system packages
-- [x] Configure SSH and firewall properly
-- [x] Create rebuild script for easy deployments
-- [ ] Set up automatic system updates
+## Core Infrastructure
+- [ ] Monitoring: Prometheus + Grafana
+- [ ] DNS Ad-blocking: blocky or Pi-hole (tbd)
+- [ ] Backup System: Restic with automated snapshots (necessary?)
 
-## Core Services
-- [x] Enable Docker and container management
-- [ ] Set up reverse proxy (Traefik/Nginx)
-- [ ] Configure SSL/TLS certificates
-- [ ] Set up monitoring (Prometheus/Grafana)
-- [ ] Configure backup system
+## Application Services (NixOS Services)
+- [ ] Media Server: Jellyfin
+- [ ] Media Management: Sonarr, Radarr, Prowlarr, Bazarr
+- [ ] Media Requests: Overseerr or Jellyseerr
+- [ ] Cloud Storage: Nextcloud
+- [ ] Password Manager: Vaultwarden
+- [ ] Home Automation: Home Assistant
+- [ ] Dashboard: Homepage or Homarr
 
-## Homelab Services (from TechHutTV recommendations)
-- [ ] Media Server (Plex/Jellyfin)
-- [ ] File sync (Nextcloud)
-- [ ] Password manager (Vaultwarden)
-- [ ] DNS server (Pi-hole/AdGuard)
-- [ ] VPN server (WireGuard)
-- [ ] Home automation (Home Assistant)
-- [ ] Network monitoring
-- [ ] Document management
+## Network & External Access
+- [ ] Configure DDNS with UDM Pro → Linode DNS
+- [ ] Consider Tailscale for secure remote access
+- [ ] Document public vs private service access
 
-## Infrastructure
-- [ ] Configure ZFS storage (if desired)
-- [ ] Set up network configuration
-- [ ] Configure log management
-- [ ] Set up alerting system
-- [ ] Document service access and credentials
+## Data Storage & Backup
+- [ ] Configure additional storage mounts
+- [ ] Set up automated backup strategy (necessary?)
+- [ ] Document data locations and recovery procedures
 
-## Security ✅
-- [x] Harden SSH configuration
-- [x] Set up fail2ban or equivalent
-- [x] Configure firewall rules for services
-- [x] Set up regular security updates
-- [x] Configure log monitoring for security events
+## Documentation & Maintenance
+- [ ] Document service URLs and access methods
+- [ ] Create service status dashboard
+- [ ] Set up monitoring alerts
+- [ ] Document rollback procedures
