@@ -118,15 +118,7 @@
     };
     jails = {
       # SSH protection
-      sshd = {
-        enabled = true;
-        filter = "sshd";
-        action = "iptables[name=ssh, port=ssh, protocol=tcp]";
-        maxretry = 3;
-        findtime = "10m";
-        bantime = "1h";
-      };
-    };
+      sshd.enabled = tru    };
   };
 
   services.printing.enable = true;
