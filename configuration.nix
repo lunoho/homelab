@@ -8,6 +8,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      # Service modules
+      ./services/networking.nix
     ];
 
   # ===================
@@ -30,11 +32,12 @@
   # ===================
   users.users.user = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKxoU5gbppBGpY9EZ7gydyVAdj0n3CXEilryavxiHbxe"
     ];
   };
+
 
   # ===================
   # NETWORKING & FIREWALL
@@ -126,10 +129,6 @@
     MaxRetentionSec=30d
   '';
 
-  # ===================
-  # VIRTUALISATION
-  # ===================
-  virtualisation.docker.enable = true;
 
   # ===================
   # PROGRAMS
