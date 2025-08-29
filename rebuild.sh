@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-cd ~/floe
+cd /home/user/homelab
 echo "Current config version: $(git rev-parse --short HEAD)"
 
 git fetch
