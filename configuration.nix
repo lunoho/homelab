@@ -130,8 +130,6 @@
       # HTTP/HTTPS protection
       nginx-http-auth = {
         enabled = true;
-        filter = "nginx-http-auth";
-        action = "iptables[name=nginx-http-auth, port=http, protocol=tcp]";
         maxretry = 5;
         findtime = "10m";
         bantime = "1h";
