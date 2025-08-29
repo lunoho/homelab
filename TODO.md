@@ -44,9 +44,9 @@
 - [ ] Set up alerting system
 - [ ] Document service access and credentials
 
-## Security
-- [ ] Harden SSH configuration
-- [ ] Set up fail2ban or equivalent
-- [ ] Configure firewall rules for services
-- [ ] Set up regular security updates
-- [ ] Configure log monitoring for security events
+## Security ✅
+- [x] Harden SSH configuration
+- [x] Set up fail2ban or equivalent
+- [x] Configure firewall rules for services
+- [x] Set up regular security updates
+- [x] Configure log monitoring for security events
