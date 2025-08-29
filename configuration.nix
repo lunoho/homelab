@@ -148,7 +148,7 @@
     iperf3 speedtest-cli wireguard-tools
 
     # File & Archive Tools
-    zip unzip tar gzip p7zip
+    zip unzip gzip p7zip
 
     # Monitoring & Debugging
     iotop nethogs bandwhich
