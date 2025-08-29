@@ -26,18 +26,19 @@ in
         };
       };
 
-      # Certificate resolvers
-      certificatesResolvers = {
-        letsencrypt = {
-          acme = {
-            email = secrets.email;
-            storage = "/var/lib/traefik/acme.json";
-            httpChallenge = {
-              entryPoint = "web";
-            };
-          };
-        };
-      };
+      # Certificate resolvers (disabled for local testing)
+      # TODO: Re-enable once DDNS is setup and domains are publicly accessible
+      # certificatesResolvers = {
+      #   letsencrypt = {
+      #     acme = {
+      #       email = secrets.email;
+      #       storage = "/var/lib/traefik/acme.json";
+      #       httpChallenge = {
+      #         entryPoint = "web";
+      #       };
+      #     };
+      #   };
+      # };
 
       # File provider for static routes (since no Docker)
       providers = {
@@ -52,6 +53,12 @@ in
         dashboard = true;
         insecure = false;
       };
+
+      # Enable ping service
+      ping = {};
+
+      # For local testing, disable ACME challenge (use self-signed certs)
+      # certificatesResolvers will be re-enabled once DDNS is setup
 
       # Logging
       log = {
@@ -78,8 +85,8 @@ in
             entryPoints:
               - websecure
             service: api@internal
-            tls:
-              certResolver: letsencrypt
+            tls: {}
+              # certResolver: letsencrypt  # Disabled for local testing
 
           # Test service - simple API endpoint
           traefik-ping:
@@ -87,8 +94,8 @@ in
             entryPoints:
               - websecure
             service: ping@internal
-            tls:
-              certResolver: letsencrypt
+            tls: {}
+              # certResolver: letsencrypt  # Disabled for local testing
 
         # Future services will be added here
         # Example:
