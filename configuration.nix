@@ -155,7 +155,7 @@
     strace ltrace mtr
 
     # Utilities
-    jq yq-go fd ripgrep bat exa
+    jq yq-go fd ripgrep bat eza
     ncdu duf
 
     # Hardware Info
