@@ -45,7 +45,7 @@ if [ -n "$BRANCH" ]; then
   fi
 else
   # Show interactive branch selection if multiple branches available
-  git fetch origin >/dev/null 2>&1
+  git fetch origin --prune >/dev/null 2>&1
   CURRENT_BRANCH=$(git branch --show-current)
   AVAILABLE_BRANCHES=($(git branch -r --format='%(refname:short)' | sed 's/origin\///' | grep -vE '^HEAD$|HEAD' | sort -u))
 
@@ -76,8 +76,8 @@ else
   fi
 fi
 
-# Check for updates
-git fetch
+# Check for updates and clean up stale branches
+git fetch --prune
 CURRENT=$(git rev-parse HEAD)
 UPSTREAM=$(git rev-parse @{u} 2>/dev/null || git rev-parse origin/$(git branch --show-current))
 
