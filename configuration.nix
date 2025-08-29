@@ -116,9 +116,7 @@
       maxtime = "48h";
       factor = "2";
     };
-    jails = {
-      # SSH protection
-      sshd.enabled = tru    };
+    jails.sshd.enabled = true;
   };
 
   services.printing.enable = true;
