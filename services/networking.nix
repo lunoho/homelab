@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  secrets = import ../secrets.nix;
+  secrets = import /home/user/secrets.nix;
 in
 {
   # ===================

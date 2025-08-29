@@ -48,7 +48,7 @@ else
   git fetch origin >/dev/null 2>&1
   CURRENT_BRANCH=$(git branch --show-current)
   AVAILABLE_BRANCHES=($(git branch -r --format='%(refname:short)' | sed 's/origin\///' | grep -v HEAD | sort -u))
-  
+
   if [ ${#AVAILABLE_BRANCHES[@]} -gt 1 ]; then
     echo "Available branches:"
     for i in "${!AVAILABLE_BRANCHES[@]}"; do
@@ -58,10 +58,10 @@ else
         echo "  $((i+1)). ${AVAILABLE_BRANCHES[$i]}"
       fi
     done
-    
+
     echo -n "Select branch to deploy (or press Enter for current): "
     read -r CHOICE
-    
+
     if [ -n "$CHOICE" ] && [ "$CHOICE" -ge 1 ] && [ "$CHOICE" -le ${#AVAILABLE_BRANCHES[@]} ]; then
       SELECTED_BRANCH="${AVAILABLE_BRANCHES[$((CHOICE-1))]}"
       if [ "$SELECTED_BRANCH" != "$CURRENT_BRANCH" ]; then
@@ -88,18 +88,17 @@ if [ "$CURRENT" != "$UPSTREAM" ] || [ "$FORCE_REBUILD" = true ]; then
   else
     echo "Force rebuild requested..."
   fi
-  
+
   echo "Rebuilding NixOS..."
-  
-  # Check if secrets.nix exists
-  if [ ! -f secrets.nix ]; then
-    echo "ERROR: secrets.nix not found!"
+
+  # Check if secrets.nix exists in home directory
+  if [ ! -f ~/secrets.nix ]; then
+    echo "ERROR: ~/secrets.nix not found!"
     echo "Copy the example and customize it:"
-    echo "  cp secrets.nix.example secrets.nix"
-    echo "  # Then edit secrets.nix with your actual domain and email"
+    echo "  cp $(pwd)/secrets.nix.example ~/secrets.nix"
     exit 1
   fi
-  
+
   sudo nixos-rebuild switch
   echo "Updated to: $(git rev-parse --short HEAD) ($(git branch --show-current))"
 else
