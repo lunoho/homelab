@@ -126,14 +126,6 @@
         findtime = "10m";
         bantime = "1h";
       };
-
-      # HTTP/HTTPS protection
-      nginx-http-auth = {
-        enabled = true;
-        maxretry = 5;
-        findtime = "10m";
-        bantime = "1h";
-      };
     };
   };
 
