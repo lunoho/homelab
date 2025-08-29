@@ -47,7 +47,7 @@ else
   # Show interactive branch selection if multiple branches available
   git fetch origin --prune >/dev/null 2>&1
   CURRENT_BRANCH=$(git branch --show-current)
-  AVAILABLE_BRANCHES=($(git branch -r --format='%(refname:short)' | sed 's/origin\///' | grep -vE '^HEAD$|HEAD' | sort -u))
+  AVAILABLE_BRANCHES=($(git branch -r --format='%(refname:short)' | sed 's/origin\///' | grep -vE 'HEAD|^origin$' | sort -u))
 
   if [ ${#AVAILABLE_BRANCHES[@]} -gt 1 ]; then
     echo "Available branches:"
