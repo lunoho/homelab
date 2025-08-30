@@ -50,7 +50,7 @@ in
     environment = {
       LINODE_API_TOKEN = secrets.linode.apiToken;
       LINODE_DOMAIN_ID = secrets.linode.domainId;
-      LINODE_RECORD_ID = secrets.linode.recordId;
+      LINODE_RECORDS = builtins.toJSON secrets.linode.records;
       DOMAIN_NAME = secrets.domain;
     };
   };

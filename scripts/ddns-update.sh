@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 # Linode DDNS Updater Script
-# Updates A record when public IP changes
+# Updates multiple A records when public IP changes
 
 set -euo pipefail
 
 # Configuration (will be replaced by NixOS systemd environment)
 DOMAIN_ID="${LINODE_DOMAIN_ID}"
-RECORD_ID="${LINODE_RECORD_ID}"
 API_TOKEN="${LINODE_API_TOKEN}"
 DOMAIN_NAME="${DOMAIN_NAME}"
+RECORDS="${LINODE_RECORDS}"  # JSON array of records
 
 # API endpoints
 LINODE_API="https://api.linode.com/v4"
@@ -36,25 +36,27 @@ get_public_ip() {
 
 # Get current DNS record IP
 get_dns_ip() {
+    local record_id="$1"
     curl -s --max-time 10 \
         -H "Authorization: Bearer $API_TOKEN" \
-        "$LINODE_API/domains/$DOMAIN_ID/records/$RECORD_ID" | \
+        "$LINODE_API/domains/$DOMAIN_ID/records/$record_id" | \
         jq -r '.target' || {
-            error "Failed to get current DNS record"
+            error "Failed to get current DNS record for ID $record_id"
         }
 }
 
 # Update DNS record
 update_dns_record() {
-    local new_ip="$1"
-
+    local record_id="$1"
+    local new_ip="$2"
+    
     curl -s --max-time 30 \
         -H "Authorization: Bearer $API_TOKEN" \
         -H "Content-Type: application/json" \
         -X PUT \
         -d "{\"target\": \"$new_ip\", \"ttl_sec\": 300}" \
-        "$LINODE_API/domains/$DOMAIN_ID/records/$RECORD_ID" >/dev/null || {
-            error "Failed to update DNS record"
+        "$LINODE_API/domains/$DOMAIN_ID/records/$record_id" >/dev/null || {
+            error "Failed to update DNS record ID $record_id"
         }
 }
 
@@ -76,49 +78,62 @@ is_valid_ip() {
 # Main execution
 main() {
     log "Starting DDNS update check for $DOMAIN_NAME"
-
+    
     # Validate required environment variables
     if [[ -z "${API_TOKEN:-}" ]]; then
         error "LINODE_API_TOKEN environment variable is required"
     fi
-
-    # Get current IPs
+    
+    if [[ -z "${RECORDS:-}" ]]; then
+        error "LINODE_RECORDS environment variable is required"
+    fi
+    
+    # Get current public IP
     log "Getting current public IP..."
     current_ip=$(get_public_ip)
-
+    
     if ! is_valid_ip "$current_ip"; then
         error "Invalid public IP format: $current_ip"
     fi
-
+    
     log "Current public IP: $current_ip"
-
-    log "Getting current DNS record..."
-    dns_ip=$(get_dns_ip)
-
-    if [[ "$dns_ip" == "null" ]] || [[ -z "$dns_ip" ]]; then
-        error "Failed to retrieve DNS record or record not found"
-    fi
-
-    log "Current DNS IP: $dns_ip"
-
-    # Compare and update if different
-    if [[ "$current_ip" != "$dns_ip" ]]; then
-        log "IP changed from $dns_ip to $current_ip - updating DNS record..."
-        update_dns_record "$current_ip"
-        log "DNS record updated successfully"
-
-        # Verify the update
-        sleep 2
-        new_dns_ip=$(get_dns_ip)
-        if [[ "$new_dns_ip" == "$current_ip" ]]; then
-            log "DNS update verified successfully"
-        else
-            error "DNS update verification failed: expected $current_ip, got $new_dns_ip"
+    
+    # Parse records JSON and process each record
+    echo "$RECORDS" | jq -r '.[] | @base64' | while IFS= read -r record; do
+        # Decode record
+        name=$(echo "$record" | base64 -d | jq -r '.name')
+        id=$(echo "$record" | base64 -d | jq -r '.id')
+        
+        log "Processing record: $name (ID: $id)"
+        
+        # Get current DNS IP
+        dns_ip=$(get_dns_ip "$id")
+        
+        if [[ "$dns_ip" == "null" ]] || [[ -z "$dns_ip" ]]; then
+            error "Failed to retrieve DNS record for $name (ID: $id)"
         fi
-    else
-        log "IP unchanged - no update needed"
-    fi
-
+        
+        log "Current DNS IP for $name: $dns_ip"
+        
+        # Compare and update if different
+        if [[ "$current_ip" != "$dns_ip" ]]; then
+            log "IP changed for $name from $dns_ip to $current_ip - updating..."
+            update_dns_record "$id" "$current_ip"
+            log "DNS record updated successfully for $name"
+            
+            # Verify the update
+            sleep 2
+            new_dns_ip=$(get_dns_ip "$id")
+            if [[ "$new_dns_ip" == "$current_ip" ]]; then
+                log "DNS update verified successfully for $name"
+            else
+                error "DNS update verification failed for $name: expected $current_ip, got $new_dns_ip"
+            fi
+        else
+            log "IP unchanged for $name - no update needed"
+        fi
+    done
+    
     log "DDNS update check completed"
 }
 
