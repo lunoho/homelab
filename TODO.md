@@ -1,7 +1,8 @@
 # Homelab TODO
 ## Core Infrastructure
 - [ ] Monitoring: Prometheus + Grafana
-- [ ] DNS Ad-blocking: blocky or Pi-hole (tbd)
+- [ ] Internal DNS: AdGuard Home with split DNS for *.domain.com
+- [ ] SSL Certificates: ACME with DNS challenges for wildcard certs
 - [ ] Backup System: Restic with automated snapshots (necessary?)
 
 ## Application Services (NixOS Services)
@@ -14,6 +15,9 @@
 - [ ] Dashboard: Homepage or Homarr
 
 ## Network & External Access
+- [ ] AdGuard Home: Local DNS server with ad-blocking
+- [ ] Split DNS: Internal resolution for homelab services
+- [ ] Wildcard SSL: *.domain.com certificates via DNS challenges
 - [ ] Consider Tailscale for secure remote access
 - [ ] Document public vs private service access
 
