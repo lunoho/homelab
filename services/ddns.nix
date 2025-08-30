@@ -17,7 +17,11 @@ in
       Type = "oneshot";
       User = "ddns";
       Group = "ddns";
-      ExecStart = "${pkgs.bash}/bin/bash ${../scripts/ddns-update.sh}";
+      ExecStart = let
+        ddnsScript = pkgs.writeShellScript "ddns-update" ''
+          ${builtins.readFile ../scripts/ddns-update.sh}
+        '';
+      in "${ddnsScript}";
 
       # Security hardening
       DynamicUser = true;
