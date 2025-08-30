@@ -125,7 +125,6 @@ in
     host = "0.0.0.0";
     port = 3000;
     settings = {
-
       # Admin user configuration from secrets
       # Password must be bcrypt hash - see secrets.nix.example for generation commands
       users = [
@@ -198,7 +197,7 @@ in
         address = "0.0.0.0:3000";
       };
 
-      # Query logging with privacy protection
+      # Query logging
       querylog = {
         enabled = true;
         file_enabled = true;
