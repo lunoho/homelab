@@ -53,8 +53,6 @@ in
         insecure = false;
       };
 
-      # Enable ping service
-      ping = {};
 
       # Logging
       log = {
@@ -84,14 +82,6 @@ in
             tls:
               certResolver: letsencrypt
 
-          # Test service - simple API endpoint
-          traefik-ping:
-            rule: "Host(`ping.${secrets.domain}`)"
-            entryPoints:
-              - websecure
-            service: ping@internal
-            tls:
-              certResolver: letsencrypt
 
         # Future services will be added here
         # Example:
