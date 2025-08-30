@@ -122,10 +122,9 @@ in
   # ===================
   services.adguardhome = {
     enable = true;
+    host = "0.0.0.0";
     port = 3000;
     settings = {
-      bind_host = "0.0.0.0";
-      bind_port = 53;
 
       # Admin user configuration from secrets
       # Password must be bcrypt hash - see secrets.nix.example for generation commands
