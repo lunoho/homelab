@@ -5,12 +5,6 @@ let
 in
 
 {
-  # DDNS Update Script Package
-  environment.systemPackages = with pkgs; [
-    jq  # Required for JSON parsing in the script
-    curl  # Required for API calls
-  ];
-
   # DDNS Update Service
   systemd.services.ddns-update = {
     description = "Linode DDNS Update Service";
@@ -22,6 +16,9 @@ in
       User = "ddns";
       Group = "ddns";
       ExecStart = "${pkgs.bash}/bin/bash ${../scripts/ddns-update.sh}";
+
+      # Provide necessary tools in PATH
+      Path = with pkgs; [ curl jq coreutils ];
 
       # Security hardening
       DynamicUser = true;
