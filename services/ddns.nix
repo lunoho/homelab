@@ -11,14 +11,13 @@ in
     wants = [ "network-online.target" ];
     after = [ "network-online.target" ];
 
+    path = with pkgs; [ curl jq coreutils ];
+
     serviceConfig = {
       Type = "oneshot";
       User = "ddns";
       Group = "ddns";
       ExecStart = "${pkgs.bash}/bin/bash ${../scripts/ddns-update.sh}";
-
-      # Provide necessary tools in PATH
-      Path = with pkgs; [ curl jq coreutils ];
 
       # Security hardening
       DynamicUser = true;
