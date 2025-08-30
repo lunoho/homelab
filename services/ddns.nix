@@ -72,9 +72,4 @@ in
   };
 
   users.groups.ddns = {};
-
-  # Ensure script is executable
-  system.activationScripts.ddns-script-permissions = ''
-    chmod +x ${../scripts/ddns-update.sh}
-  '';
 }
