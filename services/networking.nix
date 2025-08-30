@@ -114,7 +114,7 @@ in
 
   # Environment variables for DNS challenge
   systemd.services.traefik.environment = {
-    LINODE_TOKEN = secrets.linode.apiToken
+    LINODE_TOKEN = secrets.linode.apiToken;
   };
 
   # ===================
