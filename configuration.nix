@@ -39,6 +39,19 @@
     ];
   };
 
+  # Allow wheel group to run nixos-rebuild without password
+  security.sudo.extraRules = [
+    {
+      users = [ "user" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/nixos-rebuild";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   environment.variables = {
     TERM = "xterm-256color";
   };
