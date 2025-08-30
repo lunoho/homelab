@@ -1,11 +1,4 @@
 # Homelab TODO
-
-## Current: Test & Deploy Infrastructure
-- [x] Test Traefik configuration locally
-- [x] Configure DDNS with UDM Pro → Linode DNS
-- [ ] Set up port forwarding (80/443)
-- [ ] Test external HTTPS access
-
 ## Core Infrastructure
 - [ ] Monitoring: Prometheus + Grafana
 - [ ] DNS Ad-blocking: blocky or Pi-hole (tbd)
