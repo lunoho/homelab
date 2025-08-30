@@ -14,7 +14,6 @@
 - [ ] Dashboard: Homepage or Homarr
 
 ## Network & External Access
-- [ ] Configure DDNS with UDM Pro → Linode DNS
 - [ ] Consider Tailscale for secure remote access
 - [ ] Document public vs private service access
 
