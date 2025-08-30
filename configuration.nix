@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       # Service modules
       ./services/networking.nix
+      ./services/ddns.nix
     ];
 
   # ===================
