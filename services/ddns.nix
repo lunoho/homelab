@@ -49,8 +49,8 @@ in
 
     environment = {
       LINODE_API_TOKEN = secrets.linode.apiToken;
-      LINODE_SUBDOMAINS = builtins.toJSON secrets.linode.externalSubdomains;
       DOMAIN_NAME = secrets.domain;
+      SUBDOMAINS = builtins.toJSON secrets.externalSubdomains;
     };
   };
 
