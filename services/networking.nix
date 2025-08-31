@@ -140,11 +140,11 @@ in
         bind_hosts = [ "0.0.0.0" ];
         port = 53;
 
-        # Upstream DNS servers
+        # Upstream DNS servers (DNS-over-HTTPS for privacy)
         upstream_dns = [
-          "1.1.1.1"
-          "8.8.8.8"
-          "1.0.0.1"
+          "https://1.1.1.1/dns-query"
+          "https://8.8.8.8/dns-query" 
+          "https://9.9.9.9/dns-query"
         ];
 
         # Bootstrap DNS for initial resolution
@@ -157,13 +157,17 @@ in
         upstream_dns_file = "";
       };
 
-      # Filtering configuration
+      # Filtering configuration with security hardening
       filtering = {
         protection_enabled = true;
         filtering_enabled = true;
         blocking_mode = "default";
         blocked_response_ttl = 300;
-
+        
+        # Enhanced security features
+        safe_browsing_enabled = true;  # Block malicious websites
+        browsing_protection_enabled = true;  # Additional malware/phishing protection
+        
         # DNS rewrites for local domain resolution
         rewrites = [
           {
@@ -178,18 +182,30 @@ in
         address = "0.0.0.0:3000";
       };
 
-      # Query logging
+      # Query logging with privacy protection
       querylog = {
         enabled = true;
         file_enabled = true;
-        interval = "24h";
+        interval = "24h";  # Retain queries for 24 hours
         size_memory = 1000;
+        anonymize_client_ip = true;  # Anonymize client IPs for privacy
       };
 
       # Statistics
       statistics = {
         enabled = true;
         interval = "24h";
+      };
+
+      # Client identification for network visibility
+      clients = {
+        runtime_sources = {
+          whois = true;
+          arp = true;
+          rdns = true;
+          dhcp = true;
+        };
+        persistent = [];  # Add specific client configs if needed
       };
     };
   };
