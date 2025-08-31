@@ -49,7 +49,7 @@ in
       };
       security = {
         admin_user = "admin";
-        # Leave password unset to use default admin/admin
+        admin_password = "admin";
       };
     };
 
@@ -64,6 +64,9 @@ in
       }];
     };
   };
+
+  # Fix Grafana service sandboxing issues
+  systemd.services.grafana.serviceConfig.ProtectHome = false;
 
 
   # TODO: Configure alerting rules
