@@ -168,6 +168,22 @@ in
         safe_browsing_enabled = true;  # Block malicious websites
         browsing_protection_enabled = true;  # Additional malware/phishing protection
         
+        # Default blocklists
+        filters = [
+          {
+            enabled = true;
+            url = "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt";
+            name = "AdGuard DNS filter";
+            id = 1;
+          }
+          {
+            enabled = true;
+            url = "https://adaway.org/hosts.txt";
+            name = "AdAway Default Blocklist";
+            id = 2;
+          }
+        ];
+        
         # DNS rewrites for local domain resolution
         rewrites = [
           {
