@@ -66,7 +66,7 @@ in
   };
 
   # Fix Grafana service sandboxing issues
-  systemd.services.grafana.serviceConfig.ProtectHome = false;
+  systemd.services.grafana.serviceConfig.ProtectHome = lib.mkForce false;
 
 
   # TODO: Configure alerting rules
