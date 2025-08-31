@@ -3,7 +3,7 @@
 - [ ] Monitoring: Prometheus + Grafana
 - [X] Internal DNS: AdGuard Home with split DNS for *.domain.com
 - [X] SSL Certificates: ACME with DNS challenges for wildcard certs
-- [ ] Backup System: Restic with automated snapshots (necessary?)
+- [ ] Backup System: Restic with automated snapshots
 
 ## Application Services (NixOS Services)
 - [ ] Media Server: Jellyfin
@@ -22,9 +22,8 @@
 - [ ] Consider Tailscale for secure remote access
 - [ ] Investigate additional AdGuard lists and settings
 
-## Data Storage & Backup
+## Data Storage
 - [ ] Configure additional storage mounts
-- [ ] Set up automated backup strategy
 - [ ] Document data locations and recovery procedures
 
 ## Documentation & Maintenance
