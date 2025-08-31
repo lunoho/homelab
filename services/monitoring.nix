@@ -49,7 +49,7 @@ in
       };
       security = {
         admin_user = "admin";
-        admin_password = secrets.adminPassword;
+        admin_password = "$__env{GRAFANA_ADMIN_PASSWORD}";
       };
     };
 
@@ -65,8 +65,11 @@ in
     };
   };
 
-  # TODO: Add Traefik labels for Grafana web access
+  # Set Grafana admin password via environment variable (avoids Nix store)
+  systemd.services.grafana.environment = {
+    GRAFANA_ADMIN_PASSWORD = secrets.adminPassword;
+  };
+
   # TODO: Configure alerting rules
   # TODO: Add more exporters (systemd, nginx, etc.)
-  # TODO: Consider using secrets.domain for any domain references
 }
