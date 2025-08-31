@@ -1,9 +1,9 @@
 # Homelab TODO
 ## Core Infrastructure
 - [ ] Monitoring: Prometheus + Grafana
-- [ ] Internal DNS: AdGuard Home with split DNS for *.domain.com
-- [ ] SSL Certificates: ACME with DNS challenges for wildcard certs
-- [ ] Backup System: Restic with automated snapshots (necessary?)
+- [X] Internal DNS: AdGuard Home with split DNS for *.domain.com
+- [X] SSL Certificates: ACME with DNS challenges for wildcard certs
+- [ ] Backup System: Restic with automated snapshots
 
 ## Application Services (NixOS Services)
 - [ ] Media Server: Jellyfin
@@ -15,15 +15,15 @@
 - [ ] Dashboard: Homepage or Homarr
 
 ## Network & External Access
-- [ ] AdGuard Home: Local DNS server with ad-blocking
-- [ ] Split DNS: Internal resolution for homelab services
-- [ ] Wildcard SSL: *.domain.com certificates via DNS challenges
+- [x] AdGuard Home: Local DNS server with ad-blocking
+- [x] Split DNS: Internal resolution for homelab services
+- [x] Wildcard SSL: *.domain.com certificates via DNS challenges
+- [ ] Change UDM DNS to homelab once server build is stable
 - [ ] Consider Tailscale for secure remote access
-- [ ] Document public vs private service access
+- [ ] Investigate additional AdGuard lists and settings
 
-## Data Storage & Backup
+## Data Storage
 - [ ] Configure additional storage mounts
-- [ ] Set up automated backup strategy (necessary?)
 - [ ] Document data locations and recovery procedures
 
 ## Documentation & Maintenance

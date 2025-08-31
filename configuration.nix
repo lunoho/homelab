@@ -70,7 +70,7 @@
     ];
 
     allowedUDPPorts = [
-      53   # DNS (Pi-hole)
+      53   # DNS (AdGuard Home)
     ];
 
     allowedTCPPortRanges = [
