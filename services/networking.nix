@@ -96,11 +96,25 @@ in
             tls:
               certResolver: letsencrypt
 
+          # Grafana Dashboard
+          grafana-dashboard:
+            rule: "Host(`grafana.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: grafana
+            tls:
+              certResolver: letsencrypt
+
         services:
           adguard:
             loadBalancer:
               servers:
                 - url: "http://127.0.0.1:3000"
+
+          grafana:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:3001"
 
         # Future services will be added here
         # Example:

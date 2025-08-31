@@ -42,8 +42,10 @@ in
     enable = true;
     settings = {
       server = {
-        http_port = 3000;
+        http_port = 3001;
         http_addr = "127.0.0.1";
+        domain = "grafana.${secrets.domain}";
+        root_url = "https://grafana.${secrets.domain}";
       };
       security = {
         admin_user = "admin";
