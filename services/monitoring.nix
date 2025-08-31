@@ -49,7 +49,7 @@ in
       };
       security = {
         admin_user = "admin";
-        admin_password = "$__file{/etc/secrets/grafana/admin-password}";
+        # Leave password unset to use default admin/admin
       };
     };
 
@@ -65,11 +65,6 @@ in
     };
   };
 
-  # Create password file for Grafana using systemd.tmpfiles (avoids Nix store)
-  systemd.tmpfiles.rules = [
-    "d /etc/secrets/grafana 0755 root root -"
-    "f+ /etc/secrets/grafana/admin-password 0600 grafana grafana - ${secrets.adminPassword}"
-  ];
 
   # TODO: Configure alerting rules
   # TODO: Add more exporters (systemd, nginx, etc.)
