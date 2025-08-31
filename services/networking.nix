@@ -124,7 +124,6 @@ in
     enable = true;
     host = "0.0.0.0";
     port = 3000;
-    mutableSettings = false;
     settings = {
 
       # Admin user configuration from secrets
@@ -156,14 +155,6 @@ in
 
         # Enable DNS-over-HTTPS
         upstream_dns_file = "";
-
-        # Local domain resolution
-        rewrites = [
-          {
-            domain = "*.${secrets.domain}";
-            answer = config.networking.primaryIPAddress or "192.168.1.5";
-          }
-        ];
       };
 
       # Filtering configuration
@@ -172,6 +163,14 @@ in
         filtering_enabled = true;
         blocking_mode = "default";
         blocked_response_ttl = 300;
+
+        # DNS rewrites for local domain resolution
+        rewrites = [
+          {
+            domain = "*.${secrets.domain}";
+            answer = config.networking.primaryIPAddress or "192.168.1.5";
+          }
+        ];
       };
 
       # Web interface settings
