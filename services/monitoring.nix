@@ -49,7 +49,7 @@ in
       };
       security = {
         admin_user = "admin";
-        admin_password = "$__file{/run/secrets/grafana-password}";
+        admin_password = "$__file{/etc/secrets/grafana/admin-password}";
       };
     };
 
@@ -65,25 +65,11 @@ in
     };
   };
 
-  # Create password file for Grafana (avoids Nix store)
+  # Create password file for Grafana using systemd.tmpfiles (avoids Nix store)
   systemd.tmpfiles.rules = [
-    "d /run/secrets 0755 root root -"
+    "d /etc/secrets/grafana 0755 root root -"
+    "f+ /etc/secrets/grafana/admin-password 0600 grafana grafana - ${secrets.adminPassword}"
   ];
-  
-  systemd.services.grafana-password-setup = {
-    description = "Setup Grafana password file";
-    before = [ "grafana.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      echo -n "${secrets.adminPassword}" > /run/secrets/grafana-password
-      chmod 600 /run/secrets/grafana-password
-      chown grafana:grafana /run/secrets/grafana-password
-    '';
-  };
 
   # TODO: Configure alerting rules
   # TODO: Add more exporters (systemd, nginx, etc.)
