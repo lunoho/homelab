@@ -11,6 +11,7 @@
       # Service modules
       ./services/networking.nix
       ./services/ddns.nix
+      ./services/monitoring.nix
     ];
 
   # ===================
@@ -67,6 +68,8 @@
       22   # SSH
       80   # HTTP (for Let's Encrypt challenges and web services)
       443  # HTTPS
+      3000 # Grafana
+      9090 # Prometheus
     ];
 
     allowedUDPPorts = [

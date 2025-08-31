@@ -1,5 +1,8 @@
 { config, lib, pkgs, ... }:
 
+let
+  secrets = import /home/user/secrets.nix;
+in
 {
   # ===================
   # PROMETHEUS MONITORING
@@ -7,7 +10,7 @@
   services.prometheus = {
     enable = true;
     port = 9090;
-    
+
     exporters = {
       node = {
         enable = true;
@@ -44,7 +47,7 @@
       };
       security = {
         admin_user = "admin";
-        admin_password = "changeme"; # TODO: Use secrets management
+        admin_password = secrets.adminPassword;
       };
     };
 
@@ -63,4 +66,5 @@
   # TODO: Add Traefik labels for Grafana web access
   # TODO: Configure alerting rules
   # TODO: Add more exporters (systemd, nginx, etc.)
+  # TODO: Consider using secrets.domain for any domain references
 }
