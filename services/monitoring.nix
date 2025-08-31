@@ -49,7 +49,7 @@ in
       };
       security = {
         admin_user = "admin";
-        admin_password = "$__env{GRAFANA_ADMIN_PASSWORD}";
+        admin_password = "$__file{/run/secrets/grafana-password}";
       };
     };
 
@@ -65,9 +65,24 @@ in
     };
   };
 
-  # Set Grafana admin password via environment variable (avoids Nix store)
-  systemd.services.grafana.environment = {
-    GRAFANA_ADMIN_PASSWORD = secrets.adminPassword;
+  # Create password file for Grafana (avoids Nix store)
+  systemd.tmpfiles.rules = [
+    "d /run/secrets 0755 root root -"
+  ];
+  
+  systemd.services.grafana-password-setup = {
+    description = "Setup Grafana password file";
+    before = [ "grafana.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      echo -n "${secrets.adminPassword}" > /run/secrets/grafana-password
+      chmod 600 /run/secrets/grafana-password
+      chown grafana:grafana /run/secrets/grafana-password
+    '';
   };
 
   # TODO: Configure alerting rules
