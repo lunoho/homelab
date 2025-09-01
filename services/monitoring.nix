@@ -65,14 +65,13 @@ in
     };
   };
 
-  # Create password file for Grafana (avoids Nix store)
-  systemd.tmpfiles.rules = [
-    "d /etc/secrets/grafana 0755 root root -"
-    "f+ /etc/secrets/grafana/admin-password 0600 grafana grafana - ${secrets.adminPassword}"
-  ];
-
-  # Ensure password file is created before Grafana starts
-  systemd.services.grafana.after = [ "systemd-tmpfiles-setup.service" ];
+  # Create password file for Grafana using preStart (more reliable than tmpfiles)
+  systemd.services.grafana.preStart = ''
+    mkdir -p /etc/secrets/grafana
+    echo -n "${secrets.adminPassword}" > /etc/secrets/grafana/admin-password
+    chmod 600 /etc/secrets/grafana/admin-password
+    chown grafana:grafana /etc/secrets/grafana/admin-password
+  '';
 
 
   # TODO: Configure alerting rules
