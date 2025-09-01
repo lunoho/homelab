@@ -17,6 +17,23 @@ in
         enabledCollectors = [ "systemd" "processes" ];
         port = 9100;
       };
+
+      systemd = {
+        enable = true;
+        port = 9558;
+      };
+
+      postgres = {
+        enable = true;
+        port = 9187;
+      };
+
+      # Monitor DNS blocking and queries
+      adguard = {
+        enable = true;
+        port = 9617;
+        adguardHome.url = "http://127.0.0.1:3000";
+      };
     };
 
     scrapeConfigs = [
@@ -24,6 +41,24 @@ in
         job_name = "node";
         static_configs = [{
           targets = [ "127.0.0.1:9100" ];
+        }];
+      }
+      {
+        job_name = "systemd";
+        static_configs = [{
+          targets = [ "127.0.0.1:9558" ];
+        }];
+      }
+      {
+        job_name = "postgres";
+        static_configs = [{
+          targets = [ "127.0.0.1:9187" ];
+        }];
+      }
+      {
+        job_name = "adguard";
+        static_configs = [{
+          targets = [ "127.0.0.1:9617" ];
         }];
       }
       {
@@ -49,7 +84,6 @@ in
       };
       security = {
         admin_user = "admin";
-        admin_password = "$__file{/run/secrets/grafana-password}";
       };
     };
 
@@ -62,17 +96,48 @@ in
         url = "http://127.0.0.1:9090";
         isDefault = true;
       }];
+
+      dashboards.settings.providers = [{
+        name = "default";
+        orgId = 1;
+        folder = "";
+        type = "file";
+        disableDeletion = false;
+        updateIntervalSeconds = 10;
+        allowUiUpdates = true;
+        options.path = "/var/lib/grafana/dashboards";
+      }];
     };
   };
 
-  # Create password file for Grafana using preStart
-  systemd.services.grafana.preStart = ''
-    mkdir -p /run/secrets
-    echo -n "${secrets.adminPassword}" > /run/secrets/grafana-password
-    chmod 600 /run/secrets/grafana-password
-  '';
+  # Create dashboard directory
+  systemd.tmpfiles.rules = [
+    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
+  ];
 
+  # Download Grafana Dashboards
+  systemd.services.grafana-dashboard-setup = {
+    description = "Download Grafana dashboards";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      User = "grafana";
+    };
+    script = ''
+      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/node-exporter-full.json \
+        "https://grafana.com/api/dashboards/1860/revisions/37/download"
+
+      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/postgres.json \
+        "https://grafana.com/api/dashboards/9628/revisions/8/download"
+
+      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/adguard.json \
+        "https://grafana.com/api/dashboards/13330/revisions/3/download"
+
+      chmod 644 /var/lib/grafana/dashboards/*.json
+    '';
+  };
 
   # TODO: Configure alerting rules
-  # TODO: Add more exporters (systemd, nginx, etc.)
 }
