@@ -192,8 +192,6 @@
     
     # Security & System Analysis
     lynis # security auditing
-    rkhunter # rootkit detection
-    chkrootkit # rootkit checker
 
     # Utilities
     jq yq-go fd ripgrep bat eza
