@@ -71,6 +71,9 @@ in
     "f+ /etc/secrets/grafana/admin-password 0600 grafana grafana - ${secrets.adminPassword}"
   ];
 
+  # Ensure password file is created before Grafana starts
+  systemd.services.grafana.after = [ "systemd-tmpfiles-setup.service" ];
+
 
   # TODO: Configure alerting rules
   # TODO: Add more exporters (systemd, nginx, etc.)

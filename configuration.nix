@@ -172,7 +172,28 @@
 
     # Monitoring & Debugging
     iotop nethogs bandwhich
-    strace ltrace mtr
+    strace ltrace mtr sqlite
+    
+    # Database & Data Tools
+    postgresql_16 # psql client for debugging PostgreSQL
+    redis # redis-cli for Redis debugging
+    
+    # Container & Service Debugging
+    systemctl-tui # TUI for systemd services
+    
+    # Network Debugging
+    socat # network relay and debugging
+    ngrep # network packet analyzer
+    wireshark-cli # tshark for packet analysis
+    
+    # Log Analysis
+    goaccess # web log analyzer
+    lnav # log file navigator
+    
+    # Security & System Analysis
+    lynis # security auditing
+    rkhunter # rootkit detection
+    chkrootkit # rootkit checker
 
     # Utilities
     jq yq-go fd ripgrep bat eza
