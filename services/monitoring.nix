@@ -65,12 +65,11 @@ in
     };
   };
 
-  # Create password file for Grafana using preStart (more reliable than tmpfiles)
+  # Create password file for Grafana using preStart
   systemd.services.grafana.preStart = ''
-    mkdir -p /etc/secrets/grafana
-    echo -n "${secrets.adminPassword}" > /etc/secrets/grafana/admin-password
-    chmod 600 /etc/secrets/grafana/admin-password
-    chown grafana:grafana /etc/secrets/grafana/admin-password
+    mkdir -p /run/secrets
+    echo -n "${secrets.adminPassword}" > /run/secrets/grafana-password
+    chmod 600 /run/secrets/grafana-password
   '';
 
 
