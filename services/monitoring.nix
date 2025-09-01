@@ -49,7 +49,7 @@ in
       };
       security = {
         admin_user = "admin";
-        admin_password = "admin";
+        admin_password = "$__file{/etc/secrets/grafana/admin-password}";
       };
     };
 
@@ -65,8 +65,11 @@ in
     };
   };
 
-  # Fix Grafana service sandboxing issues
-  systemd.services.grafana.serviceConfig.ProtectHome = lib.mkForce false;
+  # Create password file for Grafana (avoids Nix store)
+  systemd.tmpfiles.rules = [
+    "d /etc/secrets/grafana 0755 root root -"
+    "f+ /etc/secrets/grafana/admin-password 0600 grafana grafana - ${secrets.adminPassword}"
+  ];
 
 
   # TODO: Configure alerting rules
