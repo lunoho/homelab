@@ -49,7 +49,7 @@ in
       };
       security = {
         admin_user = "admin";
-        admin_password = "$__file{/etc/secrets/grafana/admin-password}";
+        admin_password = "$__file{/run/secrets/grafana-password}";
       };
     };
 
