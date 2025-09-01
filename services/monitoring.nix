@@ -27,13 +27,6 @@ in
         enable = true;
         port = 9187;
       };
-
-      # Monitor DNS blocking and queries
-      adguard = {
-        enable = true;
-        port = 9617;
-        adguardHome.url = "http://127.0.0.1:3000";
-      };
     };
 
     scrapeConfigs = [
@@ -131,9 +124,6 @@ in
 
       ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/postgres.json \
         "https://grafana.com/api/dashboards/9628/revisions/8/download"
-
-      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/adguard.json \
-        "https://grafana.com/api/dashboards/13330/revisions/3/download"
 
       chmod 644 /var/lib/grafana/dashboards/*.json
     '';
