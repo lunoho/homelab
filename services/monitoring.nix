@@ -37,13 +37,14 @@ in
               {
                 to = "${secrets.alertEmail}";
                 subject = "🚨 Homelab Alert: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}";
-                body = ''
+                html = ''
                   {{ range .Alerts }}
-                  Alert: {{ .Annotations.summary }}
-                  Description: {{ .Annotations.description }}
-                  Severity: {{ .Labels.severity }}
-                  Instance: {{ .Labels.instance }}
-                  Time: {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+                  <h3>{{ .Annotations.summary }}</h3>
+                  <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+                  <p><strong>Severity:</strong> {{ .Labels.severity }}</p>
+                  <p><strong>Instance:</strong> {{ .Labels.instance }}</p>
+                  <p><strong>Time:</strong> {{ .StartsAt.Format "2006-01-02 15:04:05" }}</p>
+                  <hr>
                   {{ end }}
                 '';
               }
