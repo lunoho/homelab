@@ -96,11 +96,25 @@ in
             tls:
               certResolver: letsencrypt
 
+          # Grafana Dashboard
+          grafana-dashboard:
+            rule: "Host(`grafana.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: grafana
+            tls:
+              certResolver: letsencrypt
+
         services:
           adguard:
             loadBalancer:
               servers:
                 - url: "http://127.0.0.1:3000"
+
+          grafana:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:3001"
 
         # Future services will be added here
         # Example:
@@ -125,15 +139,9 @@ in
     host = "0.0.0.0";
     port = 3000;
     settings = {
-
       # Admin user configuration from secrets
-      # Password must be bcrypt hash - see secrets.nix.example for generation commands
-      users = [
-        {
-          name = "admin";
-          password = secrets.adminPassword;
-        }
-      ];
+      # Password hash will be generated from plain text password
+      users = [];
 
       # DNS settings for split DNS
       dns = {
@@ -198,7 +206,7 @@ in
         address = "0.0.0.0:3000";
       };
 
-      # Query logging with privacy protection
+      # Query logging
       querylog = {
         enabled = true;
         file_enabled = true;
@@ -224,6 +232,31 @@ in
         persistent = [];  # Add specific client configs if needed
       };
     };
+  };
+
+  # Generate AdGuard admin user with bcrypt hash from plain text password
+  systemd.services.adguard-setup = {
+    description = "Setup AdGuard admin user";
+    after = [ "adguardhome.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      # Wait for AdGuard to be ready
+      sleep 5
+      
+      # Generate bcrypt hash from plain text password
+      HASH=$(${pkgs.apacheHttpd}/bin/htpasswd -nbB admin "${secrets.adminPassword}" | cut -d: -f2)
+      
+      # Set up admin user via API (only if not already configured)
+      if ! ${pkgs.curl}/bin/curl -f http://localhost:3000/control/status >/dev/null 2>&1; then
+        ${pkgs.curl}/bin/curl -X POST http://localhost:3000/control/install/configure \
+          -H "Content-Type: application/json" \
+          -d "{\"username\":\"admin\",\"password\":\"$HASH\"}"
+      fi
+    '';
   };
 
   # Open firewall ports
