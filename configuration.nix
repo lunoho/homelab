@@ -12,6 +12,7 @@
       ./services/networking.nix
       ./services/ddns.nix
       ./services/monitoring.nix
+      ./services/media.nix
     ];
 
   # ===================
@@ -70,6 +71,11 @@
       443  # HTTPS
       3000 # Grafana
       9090 # Prometheus
+      # Media services (most covered by 8000-8999 range below)
+      5055 # Jellyseerr
+      6767 # Bazarr
+      7878 # Radarr
+      9696 # Prowlarr
     ];
 
     allowedUDPPorts = [
@@ -77,8 +83,8 @@
     ];
 
     allowedTCPPortRanges = [
-      # Docker container port mappings
-      { from = 8000; to = 8999; }
+      # Media services and other applications
+      { from = 8000; to = 8999; } # Covers Jellyfin (8096), Sonarr (8989), SABnzbd (8080)
     ];
 
     # Reject packets instead of dropping for better performance

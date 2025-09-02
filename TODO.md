@@ -6,13 +6,24 @@
 - [ ] Backup System: Restic with automated snapshots
 
 ## Application Services (NixOS Services)
-- [ ] Media Server: Jellyfin
-- [ ] Media Management: Sonarr, Radarr, Prowlarr, Bazarr
-- [ ] Media Requests: Overseerr or Jellyseerr
+- [x] Media Server: Jellyfin
+- [x] Media Management: Sonarr, Radarr, Prowlarr, Bazarr
+- [x] Media Requests: Jellyseerr
+- [x] Usenet Downloader: SABnzbd
 - [ ] Cloud Storage: Nextcloud
 - [ ] Password Manager: Vaultwarden
 - [ ] Home Automation: Home Assistant
 - [ ] Dashboard: Homepage or Homarr
+
+## Media Stack Configuration (Post-Deployment)
+- [ ] Configure usenet credentials in SABnzbd
+- [ ] Add indexers to Prowlarr (public trackers, usenet indexers)
+- [ ] Connect Sonarr/Radarr to Prowlarr for indexer management
+- [ ] Set up quality profiles in Sonarr/Radarr
+- [ ] Configure download paths and media library locations
+- [ ] Connect Jellyseerr to Jellyfin (API key setup)
+- [ ] Test end-to-end workflow: request → download → library
+- [ ] Optional: Implement declarative-jellyfin flake for advanced config
 
 ## Network & External Access
 - [x] AdGuard Home: Local DNS server with ad-blocking
