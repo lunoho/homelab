@@ -228,6 +228,9 @@
   # ===================
   # NIX SETTINGS
   # ===================
+  # Allow unfree packages (needed for media services like unrar)
+  nixpkgs.config.allowUnfree = true;
+
   nix.gc = {
     automatic = true;
     dates = "weekly";
