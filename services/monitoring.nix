@@ -10,6 +10,58 @@ in
   services.prometheus = {
     enable = true;
     port = 9090;
+    
+    alertmanager = {
+      enable = true;
+      port = 9093;
+      configuration = {
+        global = {
+          smtp_smarthost = "smtp.fastmail.com:587";
+          smtp_from = "${secrets.alertEmail}";
+          smtp_auth_username = "${secrets.alertEmail}";
+          smtp_auth_password = "${secrets.alertEmailPassword}";
+        };
+        
+        route = {
+          group_by = ["alertname"];
+          group_wait = "30s";
+          group_interval = "5m";
+          repeat_interval = "12h";
+          receiver = "email-alerts";
+        };
+        
+        receivers = [
+          {
+            name = "email-alerts";
+            email_configs = [
+              {
+                to = "${secrets.alertEmail}";
+                subject = "🚨 Homelab Alert: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}";
+                body = ''
+                  {{ range .Alerts }}
+                  Alert: {{ .Annotations.summary }}
+                  Description: {{ .Annotations.description }}
+                  Severity: {{ .Labels.severity }}
+                  Instance: {{ .Labels.instance }}
+                  Time: {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+                  {{ end }}
+                '';
+              }
+            ];
+          }
+        ];
+      };
+    };
+
+    alertmanagers = [
+      {
+        static_configs = [
+          {
+            targets = [ "127.0.0.1:9093" ];
+          }
+        ];
+      }
+    ];
 
     exporters = {
       node = {

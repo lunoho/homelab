@@ -105,6 +105,24 @@ in
             tls:
               certResolver: letsencrypt
 
+          # Prometheus Monitoring
+          prometheus-dashboard:
+            rule: "Host(`prometheus.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: prometheus
+            tls:
+              certResolver: letsencrypt
+
+          # Alertmanager
+          alertmanager-dashboard:
+            rule: "Host(`alerts.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: alertmanager
+            tls:
+              certResolver: letsencrypt
+
         services:
           adguard:
             loadBalancer:
@@ -115,6 +133,16 @@ in
             loadBalancer:
               servers:
                 - url: "http://127.0.0.1:3001"
+
+          prometheus:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:9090"
+
+          alertmanager:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:9093"
 
         # Future services will be added here
         # Example:
