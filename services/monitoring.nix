@@ -36,14 +36,17 @@ in
             email_configs = [
               {
                 to = "${secrets.alertEmail}";
-                subject = "🚨 Homelab Alert: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}";
+                headers = {
+                  Subject = "🚨 Homelab Alert: {{ .GroupLabels.alertname }}";
+                };
                 html = ''
+                  <h2>Homelab Alert</h2>
                   {{ range .Alerts }}
                   <h3>{{ .Annotations.summary }}</h3>
                   <p><strong>Description:</strong> {{ .Annotations.description }}</p>
                   <p><strong>Severity:</strong> {{ .Labels.severity }}</p>
                   <p><strong>Instance:</strong> {{ .Labels.instance }}</p>
-                  <p><strong>Time:</strong> {{ .StartsAt.Format "2006-01-02 15:04:05" }}</p>
+                  <p><strong>Status:</strong> {{ .Status }}</p>
                   <hr>
                   {{ end }}
                 '';
