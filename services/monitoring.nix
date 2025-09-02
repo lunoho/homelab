@@ -205,6 +205,18 @@ in
   services.prometheus.rules = [
     ''
       groups:
+        - name: test.rules
+          rules:
+            # Test alert - always fires
+            - alert: TestAlert
+              expr: vector(1)
+              for: 1m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Test alert for email notification"
+                description: "This is a test alert to verify email notifications are working"
+
         - name: system.rules
           rules:
             # High CPU usage
