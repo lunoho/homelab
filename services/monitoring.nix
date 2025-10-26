@@ -113,7 +113,7 @@ in
       {
         job_name = "traefik";
         static_configs = [{
-          targets = [ "127.0.0.1:8080" ];
+          targets = [ "127.0.0.1:9101" ];
         }];
       }
     ];

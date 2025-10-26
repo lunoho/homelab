@@ -54,6 +54,20 @@ in
         insecure = false;
       };
 
+      # Prometheus metrics endpoint
+      metrics = {
+        prometheus = {
+          addEntryPointsLabels = true;
+          addRoutersLabels = true;
+          addServicesLabels = true;
+          entryPoint = "metrics";
+        };
+      };
+
+      # Add metrics entry point
+      entryPoints.metrics = {
+        address = ":9101";
+      };
 
       # Logging
       log = {
@@ -371,6 +385,22 @@ in
           -d "{\"username\":\"admin\",\"password\":\"$HASH\"}"
       fi
     '';
+  };
+
+  # ===================
+  # ADGUARD PROMETHEUS EXPORTER
+  # ===================
+  systemd.services.adguard-exporter = {
+    description = "AdGuard Home Prometheus Exporter";
+    after = [ "network.target" "adguardhome.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "simple";
+      DynamicUser = true;
+      ExecStart = "${pkgs.adguardhome-exporter}/bin/adguardhome_exporter --adguard_hostname 127.0.0.1 --adguard_port 3000 --adguard_protocol http --server_port 9617";
+      Restart = "always";
+      RestartSec = "10s";
+    };
   };
 
   # Open firewall ports
