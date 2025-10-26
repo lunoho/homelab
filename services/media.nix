@@ -56,7 +56,7 @@ in
 
   # Declaratively set API key in config
   systemd.services.sonarr.preStart = ''
-    CONFIG_FILE="/var/lib/sonarr/config.xml"
+    CONFIG_FILE="/var/lib/sonarr/.config/NzbDrone/config.xml"
     if [ -f "$CONFIG_FILE" ]; then
       # Update existing API key
       ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.sonarr}</ApiKey>|' "$CONFIG_FILE"
@@ -75,7 +75,7 @@ in
 
   # Declaratively set API key in config
   systemd.services.radarr.preStart = ''
-    CONFIG_FILE="/var/lib/radarr/config.xml"
+    CONFIG_FILE="/var/lib/radarr/.config/Radarr/config.xml"
     if [ -f "$CONFIG_FILE" ]; then
       # Update existing API key
       ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.radarr}</ApiKey>|' "$CONFIG_FILE"
@@ -92,7 +92,7 @@ in
 
   # Declaratively set API key in config
   systemd.services.prowlarr.preStart = ''
-    CONFIG_FILE="/var/lib/prowlarr/config.xml"
+    CONFIG_FILE="/var/lib/private/prowlarr/config.xml"
     if [ -f "$CONFIG_FILE" ]; then
       # Update existing API key
       ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.prowlarr}</ApiKey>|' "$CONFIG_FILE"
@@ -109,10 +109,10 @@ in
 
   # Declaratively set API key in config
   systemd.services.bazarr.preStart = ''
-    CONFIG_FILE="/var/lib/bazarr/config.xml"
+    CONFIG_FILE="/var/lib/bazarr/config/config.ini"
     if [ -f "$CONFIG_FILE" ]; then
-      # Update existing API key
-      ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.bazarr}</ApiKey>|' "$CONFIG_FILE"
+      # Update existing API key in INI format
+      ${pkgs.gnused}/bin/sed -i 's|^apikey = .*|apikey = ${secrets.apiKeys.bazarr}|' "$CONFIG_FILE"
     fi
   '';
 
@@ -127,7 +127,7 @@ in
 
   # Declaratively set API key in config
   systemd.services.jellyseerr.preStart = ''
-    CONFIG_FILE="/var/lib/jellyseerr/settings.json"
+    CONFIG_FILE="/var/lib/private/jellyseerr/settings.json"
     if [ -f "$CONFIG_FILE" ]; then
       # Update existing API key using jq
       ${pkgs.jq}/bin/jq '.main.apiKey = "${secrets.apiKeys.jellyseerr}"' "$CONFIG_FILE" > "$CONFIG_FILE.tmp"
