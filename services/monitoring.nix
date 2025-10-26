@@ -105,12 +105,6 @@ in
         }];
       }
       {
-        job_name = "adguard";
-        static_configs = [{
-          targets = [ "127.0.0.1:9617" ];
-        }];
-      }
-      {
         job_name = "traefik";
         static_configs = [{
           targets = [ "127.0.0.1:9101" ];
@@ -256,18 +250,6 @@ in
               annotations:
                 summary: "High system load on {{ $labels.instance }}"
                 description: "System load is {{ $value }} for more than 5 minutes"
-
-        - name: adguard.rules
-          rules:
-            # AdGuard Home down
-            - alert: AdGuardDown
-              expr: up{job="adguard"} == 0
-              for: 2m
-              labels:
-                severity: critical
-              annotations:
-                summary: "AdGuard Home is down"
-                description: "AdGuard Home DNS service is not responding"
 
         - name: traefik.rules
           rules:

@@ -13,6 +13,7 @@
       ./services/ddns.nix
       ./services/monitoring.nix
       ./services/media.nix
+      ./services/home-manager.nix
     ];
 
   # ===================
@@ -230,6 +231,9 @@
   # ===================
   # Allow unfree packages (needed for media services like unrar)
   nixpkgs.config.allowUnfree = true;
+
+  # Enable flakes
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   nix.gc = {
     automatic = true;
