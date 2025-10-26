@@ -18,9 +18,16 @@ in
       title = "Homelab Dashboard";
       favicon = "https://gethomepage.dev/img/favicon.ico";
 
+      # Base URL for proper host validation
+      base = "https://home.${secrets.domain}";
+
       # Color scheme
       color = "slate";
       theme = "dark";
+
+      # Security - allow access from our domain
+      headerStyle = "boxed";
+      target = "_blank";
 
       # Layout
       layout = {
@@ -224,6 +231,11 @@ in
   # The "-" prefix makes the file optional
   systemd.services.homepage-dashboard.serviceConfig = {
     EnvironmentFile = lib.mkForce "-/var/lib/homepage-dashboard/homepage.env";
+  };
+
+  # Add environment variables to disable host validation (we're behind Traefik)
+  systemd.services.homepage-dashboard.environment = {
+    HOMEPAGE_VAR_ALLOWED_HOSTS = "home.${secrets.domain}";
   };
 
   # Create directory and empty default environment file
