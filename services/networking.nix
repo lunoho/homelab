@@ -88,6 +88,19 @@ in
     text = ''
       http:
         routers:
+          # Homepage Dashboard (root domain)
+          homepage:
+            rule: "Host(`${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: homepage
+            tls:
+              certResolver: letsencrypt
+              domains:
+                - main: "${secrets.domain}"
+                  sans:
+                    - "*.${secrets.domain}"
+
           # Traefik Dashboard
           traefik-dashboard:
             rule: "Host(`traefik.${secrets.domain}`)"
@@ -96,10 +109,6 @@ in
             service: api@internal
             tls:
               certResolver: letsencrypt
-              domains:
-                - main: "${secrets.domain}"
-                  sans:
-                    - "*.${secrets.domain}"
 
           # AdGuard Home Dashboard
           adguard-dashboard:
@@ -250,6 +259,11 @@ in
             loadBalancer:
               servers:
                 - url: "http://127.0.0.1:8080"
+
+          homepage:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:8082"
     '';
     mode = "0644";
   };

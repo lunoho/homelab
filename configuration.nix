@@ -14,6 +14,7 @@
       ./services/monitoring.nix
       ./services/media.nix
       ./services/home-manager.nix
+      ./services/homepage.nix
     ];
 
   # ===================
