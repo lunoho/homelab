@@ -30,10 +30,28 @@
 
 ## Getting Started
 
-1. **Clone the repository**
-2. **Copy secrets template**: `cp secrets.nix.example secrets.nix`
-3. **Edit secrets.nix** with your domain and email
-4. **Deploy**: `./rebuild.sh`
+### First-Time Setup
+
+1. **Clone the repository** on your homelab server
+2. **Generate secrets**: `./scripts/init-secrets.sh` (auto-generates API keys)
+3. **Deploy**: `./rebuild.sh`
+4. **Configure Jellyfin API** (only service requiring manual setup):
+   - Go to Jellyfin → Dashboard → API Keys
+   - Create key named "Homepage"
+   - Update `secrets.nix` with the key
+   - Rebuild: `./rebuild.sh`
+
+### Making Changes
+
+Edit configs and run `./rebuild.sh`. API keys are automatically injected into services on every rebuild.
+
+## Declarative API Keys
+
+API keys are defined once in `secrets.nix` and automatically configured in:
+- Service config files (via systemd `preStart` scripts)
+- Homepage dashboard (direct Nix reference)
+
+No manual API key copying required! Services: Sonarr, Radarr, Prowlarr, Bazarr, SABnzbd, Jellyseerr.
 
 ## Configuration Structure
 

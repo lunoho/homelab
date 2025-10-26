@@ -40,6 +40,10 @@ in
     group = "media";
   };
 
+  # Note: Jellyfin API keys are managed through the UI (Dashboard > API Keys)
+  # They cannot be set declaratively as they're stored in the database
+  # After first boot, create an API key in Jellyfin UI and add it to secrets.nix
+
   # ===================
   # SONARR - TV SERIES MANAGEMENT
   # ===================
@@ -50,8 +54,17 @@ in
     group = "media";
   };
 
+  # Declaratively set API key in config
+  systemd.services.sonarr.preStart = ''
+    CONFIG_FILE="/var/lib/sonarr/config.xml"
+    if [ -f "$CONFIG_FILE" ]; then
+      # Update existing API key
+      ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.sonarr}</ApiKey>|' "$CONFIG_FILE"
+    fi
+  '';
+
   # ===================
-  # RADARR - MOVIE MANAGEMENT  
+  # RADARR - MOVIE MANAGEMENT
   # ===================
   services.radarr = {
     enable = true;
@@ -59,6 +72,15 @@ in
     user = "media";
     group = "media";
   };
+
+  # Declaratively set API key in config
+  systemd.services.radarr.preStart = ''
+    CONFIG_FILE="/var/lib/radarr/config.xml"
+    if [ -f "$CONFIG_FILE" ]; then
+      # Update existing API key
+      ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.radarr}</ApiKey>|' "$CONFIG_FILE"
+    fi
+  '';
 
   # ===================
   # PROWLARR - INDEXER MANAGEMENT
@@ -68,6 +90,15 @@ in
     openFirewall = false;
   };
 
+  # Declaratively set API key in config
+  systemd.services.prowlarr.preStart = ''
+    CONFIG_FILE="/var/lib/prowlarr/config.xml"
+    if [ -f "$CONFIG_FILE" ]; then
+      # Update existing API key
+      ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.prowlarr}</ApiKey>|' "$CONFIG_FILE"
+    fi
+  '';
+
   # ===================
   # BAZARR - SUBTITLE MANAGEMENT
   # ===================
@@ -75,6 +106,15 @@ in
     enable = true;
     openFirewall = false;
   };
+
+  # Declaratively set API key in config
+  systemd.services.bazarr.preStart = ''
+    CONFIG_FILE="/var/lib/bazarr/config.xml"
+    if [ -f "$CONFIG_FILE" ]; then
+      # Update existing API key
+      ${pkgs.gnused}/bin/sed -i 's|<ApiKey>.*</ApiKey>|<ApiKey>${secrets.apiKeys.bazarr}</ApiKey>|' "$CONFIG_FILE"
+    fi
+  '';
 
   # ===================
   # JELLYSEERR - REQUEST MANAGEMENT
@@ -85,6 +125,16 @@ in
     openFirewall = false; # Use Traefik for external access
   };
 
+  # Declaratively set API key in config
+  systemd.services.jellyseerr.preStart = ''
+    CONFIG_FILE="/var/lib/jellyseerr/settings.json"
+    if [ -f "$CONFIG_FILE" ]; then
+      # Update existing API key using jq
+      ${pkgs.jq}/bin/jq '.main.apiKey = "${secrets.apiKeys.jellyseerr}"' "$CONFIG_FILE" > "$CONFIG_FILE.tmp"
+      mv "$CONFIG_FILE.tmp" "$CONFIG_FILE"
+    fi
+  '';
+
   # ===================
   # SABNZBD - USENET DOWNLOADER
   # ===================
@@ -92,6 +142,15 @@ in
     enable = true;
     openFirewall = false; # Use Traefik for external access
   };
+
+  # Declaratively set API key in config
+  systemd.services.sabnzbd.preStart = ''
+    CONFIG_FILE="/var/lib/sabnzbd/sabnzbd.ini"
+    if [ -f "$CONFIG_FILE" ]; then
+      # Update existing API key
+      ${pkgs.gnused}/bin/sed -i 's|^api_key = .*|api_key = ${secrets.apiKeys.sabnzbd}|' "$CONFIG_FILE"
+    fi
+  '';
 
   # ===================
   # SERVICE DEPENDENCIES & ORDERING

@@ -58,7 +58,7 @@ in
               widget = {
                 type = "jellyfin";
                 url = "http://127.0.0.1:8096";
-                key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
+                key = secrets.apiKeys.jellyfin;
                 enableBlocks = true;
                 enableNowPlaying = true;
               };
@@ -72,7 +72,7 @@ in
               widget = {
                 type = "jellyseerr";
                 url = "http://127.0.0.1:5055";
-                key = "{{HOMEPAGE_VAR_JELLYSEERR_API_KEY}}";
+                key = secrets.apiKeys.jellyseerr;
               };
             };
           }
@@ -84,7 +84,7 @@ in
               widget = {
                 type = "sabnzbd";
                 url = "http://127.0.0.1:8080";
-                key = "{{HOMEPAGE_VAR_SABNZBD_API_KEY}}";
+                key = secrets.apiKeys.sabnzbd;
               };
             };
           }
@@ -100,7 +100,7 @@ in
               widget = {
                 type = "sonarr";
                 url = "http://127.0.0.1:8989";
-                key = "{{HOMEPAGE_VAR_SONARR_API_KEY}}";
+                key = secrets.apiKeys.sonarr;
                 enableQueue = true;
               };
             };
@@ -113,7 +113,7 @@ in
               widget = {
                 type = "radarr";
                 url = "http://127.0.0.1:7878";
-                key = "{{HOMEPAGE_VAR_RADARR_API_KEY}}";
+                key = secrets.apiKeys.radarr;
                 enableQueue = true;
               };
             };
@@ -126,7 +126,7 @@ in
               widget = {
                 type = "prowlarr";
                 url = "http://127.0.0.1:9696";
-                key = "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}";
+                key = secrets.apiKeys.prowlarr;
               };
             };
           }
@@ -138,7 +138,7 @@ in
               widget = {
                 type = "bazarr";
                 url = "http://127.0.0.1:6767";
-                key = "{{HOMEPAGE_VAR_BAZARR_API_KEY}}";
+                key = secrets.apiKeys.bazarr;
               };
             };
           }
@@ -169,7 +169,7 @@ in
                 type = "adguard";
                 url = "http://127.0.0.1:3000";
                 username = "admin";
-                password = "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}";
+                password = secrets.adminPassword;
               };
             };
           }
@@ -227,54 +227,8 @@ in
     ];
   };
 
-  # Environment file for API keys (optional - service works without it)
-  # The "-" prefix makes the file optional
-  systemd.services.homepage-dashboard.serviceConfig = {
-    EnvironmentFile = lib.mkForce "-/var/lib/homepage-dashboard/homepage.env";
-  };
-
-  # Add environment variables to allow our domain (we're behind Traefik)
+  # Add allowed hosts for our domain (we're behind Traefik)
   systemd.services.homepage-dashboard.environment = {
     HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost:8082,127.0.0.1:8082,home.${secrets.domain}";
-  };
-
-  # Create directory and empty default environment file
-  systemd.tmpfiles.rules = [
-    "d /var/lib/homepage-dashboard 0750 homepage homepage -"
-    "f /var/lib/homepage-dashboard/homepage.env 0640 homepage homepage - # Empty by default"
-  ];
-
-  # Create a placeholder environment file with instructions
-  environment.etc."homepage-dashboard/homepage.env.example" = {
-    text = ''
-      # Homepage Dashboard API Keys
-      # Copy this file to /var/lib/homepage-dashboard/homepage.env and fill in your API keys
-      # Then restart homepage: sudo systemctl restart homepage-dashboard
-
-      # Jellyfin API Key (Settings > API Keys in Jellyfin)
-      HOMEPAGE_VAR_JELLYFIN_API_KEY=your_jellyfin_api_key
-
-      # Jellyseerr API Key (Settings > General in Jellyseerr)
-      HOMEPAGE_VAR_JELLYSEERR_API_KEY=your_jellyseerr_api_key
-
-      # SABnzbd API Key (Config > General in SABnzbd)
-      HOMEPAGE_VAR_SABNZBD_API_KEY=your_sabnzbd_api_key
-
-      # Sonarr API Key (Settings > General in Sonarr)
-      HOMEPAGE_VAR_SONARR_API_KEY=your_sonarr_api_key
-
-      # Radarr API Key (Settings > General in Radarr)
-      HOMEPAGE_VAR_RADARR_API_KEY=your_radarr_api_key
-
-      # Prowlarr API Key (Settings > General in Prowlarr)
-      HOMEPAGE_VAR_PROWLARR_API_KEY=your_prowlarr_api_key
-
-      # Bazarr API Key (Settings > General in Bazarr)
-      HOMEPAGE_VAR_BAZARR_API_KEY=your_bazarr_api_key
-
-      # AdGuard Home Password (admin user password)
-      HOMEPAGE_VAR_ADGUARD_PASSWORD=your_adguard_password
-    '';
-    mode = "0644";
   };
 }
