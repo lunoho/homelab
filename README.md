@@ -41,18 +41,6 @@
    - Update `secrets.nix` with the key
    - Rebuild: `./rebuild.sh`
 
-### Making Changes
-
-Edit configs and run `./rebuild.sh`. API keys are automatically injected into services on every rebuild.
-
-## Declarative API Keys
-
-API keys are defined once in `secrets.nix` and automatically configured in:
-- Service config files (via systemd `preStart` scripts)
-- Homepage dashboard (direct Nix reference)
-
-No manual API key copying required! Services: Sonarr, Radarr, Prowlarr, Bazarr, SABnzbd, Jellyseerr.
-
 ## Configuration Structure
 
 ```
