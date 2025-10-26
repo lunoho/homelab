@@ -107,6 +107,12 @@ if [ "$CURRENT" != "$UPSTREAM" ] || [ "$FORCE_REBUILD" = true ]; then
 
   sudo nixos-rebuild switch
   echo "Updated to: $(git rev-parse --short HEAD) ($(git branch --show-current))"
+
+  # Restart media services to apply API key changes from secrets.nix
+  echo ""
+  echo "Restarting media services to apply any secrets changes..."
+  sudo systemctl restart sonarr radarr prowlarr bazarr sabnzbd jellyseerr homepage-dashboard
+  echo "✅ Services restarted"
 else
   echo "Already up to date!"
 fi
