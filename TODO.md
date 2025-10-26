@@ -10,10 +10,22 @@
 - [x] Media Management: Sonarr, Radarr, Prowlarr, Bazarr
 - [x] Media Requests: Jellyseerr
 - [x] Usenet Downloader: SABnzbd
+- [x] Dashboard: Homepage
 - [ ] Cloud Storage: Nextcloud
 - [ ] Password Manager: Vaultwarden
 - [ ] Home Automation: Home Assistant
-- [ ] Dashboard: Homepage or Homarr
+
+## Declarative Config Templates (Extract from Web UI Setup)
+Complete in this order (based on dependencies):
+- [ ] Complete Prowlarr web UI setup and extract config: `sudo cat /var/lib/private/prowlarr/config.xml`
+- [ ] Complete SABnzbd web UI setup and extract config: `sudo cat /var/lib/sabnzbd/sabnzbd.ini`
+- [ ] Complete Sonarr web UI setup and extract config: `sudo cat /var/lib/sonarr/.config/NzbDrone/config.xml`
+- [ ] Complete Radarr web UI setup and extract config: `sudo cat /var/lib/radarr/.config/Radarr/config.xml`
+- [ ] Complete Jellyfin web UI setup and create API key in secrets.nix
+- [ ] Complete Bazarr web UI setup and extract config: `sudo cat /var/lib/bazarr/config/config.ini`
+- [ ] Complete Jellyseerr web UI setup and extract config: `sudo cat /var/lib/private/jellyseerr/settings.json`
+- [ ] Run `./scripts/extract-configs.sh` to save all configs to ~/config-templates/
+- [ ] Create declarative config templates in services/media.nix based on extracted configs
 
 ## Media Stack Configuration (Post-Deployment)
 - [ ] Configure usenet credentials in SABnzbd
