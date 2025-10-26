@@ -6,6 +6,7 @@ cd /home/user/homelab
 # Parse arguments
 BRANCH=""
 FORCE_REBUILD=false
+SKIP_HOME_MANAGER=false
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -17,12 +18,17 @@ while [[ $# -gt 0 ]]; do
       FORCE_REBUILD=true
       shift
       ;;
+    --skip-home-manager)
+      SKIP_HOME_MANAGER=true
+      shift
+      ;;
     -h|--help)
       echo "Usage: $0 [OPTIONS]"
       echo "Options:"
-      echo "  -b, --branch BRANCH    Switch to and pull specific branch"
-      echo "  -f, --force           Force rebuild even if no changes"
-      echo "  -h, --help            Show this help"
+      echo "  -b, --branch BRANCH      Switch to and pull specific branch"
+      echo "  -f, --force             Force rebuild even if no changes"
+      echo "  --skip-home-manager     Skip home-manager update"
+      echo "  -h, --help              Show this help"
       exit 0
       ;;
     *)
@@ -104,3 +110,38 @@ if [ "$CURRENT" != "$UPSTREAM" ] || [ "$FORCE_REBUILD" = true ]; then
 else
   echo "Already up to date!"
 fi
+
+# ===================
+# HOME MANAGER UPDATE
+# ===================
+if [ "$SKIP_HOME_MANAGER" = false ]; then
+  echo ""
+  echo "Updating home-manager configuration..."
+
+  if [ -d ~/.config/nix-config ]; then
+    cd ~/.config/nix-config
+
+    HM_CURRENT=$(git rev-parse --short HEAD)
+    echo "Current home-manager config: $HM_CURRENT ($(git branch --show-current))"
+
+    # Update home-manager repo
+    git fetch origin
+    git pull || echo "Home-manager repo already up to date"
+
+    HM_NEW=$(git rev-parse --short HEAD)
+
+    if [ "$HM_CURRENT" != "$HM_NEW" ] || [ "$FORCE_REBUILD" = true ]; then
+      echo "Applying home-manager configuration..."
+      nix run home-manager/master -- switch --flake .#user@floe
+      echo "Home-manager updated to: $HM_NEW"
+    else
+      echo "Home-manager already up to date!"
+    fi
+  else
+    echo "WARNING: ~/.config/nix-config not found, skipping home-manager update"
+    echo "Clone it with: git clone git@github.com:lunoho/homemanager.git ~/.config/nix-config"
+  fi
+fi
+
+echo ""
+echo "Rebuild complete!"

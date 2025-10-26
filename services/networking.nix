@@ -54,6 +54,20 @@ in
         insecure = false;
       };
 
+      # Prometheus metrics endpoint
+      metrics = {
+        prometheus = {
+          addEntryPointsLabels = true;
+          addRoutersLabels = true;
+          addServicesLabels = true;
+          entryPoint = "metrics";
+        };
+      };
+
+      # Add metrics entry point
+      entryPoints.metrics = {
+        address = ":9101";
+      };
 
       # Logging
       log = {
@@ -123,6 +137,63 @@ in
             tls:
               certResolver: letsencrypt
 
+          # Media Services
+          jellyfin:
+            rule: "Host(`jellyfin.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: jellyfin
+            tls:
+              certResolver: letsencrypt
+
+          sonarr:
+            rule: "Host(`sonarr.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: sonarr
+            tls:
+              certResolver: letsencrypt
+
+          radarr:
+            rule: "Host(`radarr.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: radarr
+            tls:
+              certResolver: letsencrypt
+
+          prowlarr:
+            rule: "Host(`prowlarr.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: prowlarr
+            tls:
+              certResolver: letsencrypt
+
+          bazarr:
+            rule: "Host(`bazarr.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: bazarr
+            tls:
+              certResolver: letsencrypt
+
+          jellyseerr:
+            rule: "Host(`requests.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: jellyseerr
+            tls:
+              certResolver: letsencrypt
+
+          sabnzbd:
+            rule: "Host(`sabnzbd.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: sabnzbd
+            tls:
+              certResolver: letsencrypt
+
         services:
           adguard:
             loadBalancer:
@@ -144,12 +215,41 @@ in
               servers:
                 - url: "http://127.0.0.1:9093"
 
-        # Future services will be added here
-        # Example:
-        # jellyfin:
-        #   loadBalancer:
-        #     servers:
-        #       - url: "http://127.0.0.1:8096"
+          # Media Services
+          jellyfin:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:8096"
+
+          sonarr:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:8989"
+
+          radarr:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:7878"
+
+          prowlarr:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:9696"
+
+          bazarr:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:6767"
+
+          jellyseerr:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:5055"
+
+          sabnzbd:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:8080"
     '';
     mode = "0644";
   };

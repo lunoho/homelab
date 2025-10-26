@@ -53,3 +53,4 @@ homelab/
 - [TechHutTV Must-Have Services 2025](https://techhut.tv/must-have-home-server-services-2025/)
 - [TechHutTV Homelab Config](https://github.com/TechHutTV/homelab)
 - [NixOS Service Options](https://search.nixos.org/options)
+- [Nixarr](https://nixarr.com/nixos-options/)
