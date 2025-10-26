@@ -88,18 +88,14 @@ in
     text = ''
       http:
         routers:
-          # Homepage Dashboard (root domain)
+          # Homepage Dashboard
           homepage:
-            rule: "Host(`${secrets.domain}`)"
+            rule: "Host(`home.${secrets.domain}`)"
             entryPoints:
               - websecure
             service: homepage
             tls:
               certResolver: letsencrypt
-              domains:
-                - main: "${secrets.domain}"
-                  sans:
-                    - "*.${secrets.domain}"
 
           # Traefik Dashboard
           traefik-dashboard:
@@ -109,6 +105,10 @@ in
             service: api@internal
             tls:
               certResolver: letsencrypt
+              domains:
+                - main: "${secrets.domain}"
+                  sans:
+                    - "*.${secrets.domain}"
 
           # AdGuard Home Dashboard
           adguard-dashboard:
@@ -335,10 +335,11 @@ in
         ];
         
         # DNS rewrites for local domain resolution
+        # Only rewrite subdomains - let bare domain resolve to public IP
         rewrites = [
           {
             domain = "*.${secrets.domain}";
-            answer = config.networking.primaryIPAddress or "192.168.1.5";
+            answer = "192.168.1.5";
           }
         ];
       };
