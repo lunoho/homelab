@@ -220,14 +220,16 @@ in
     ];
   };
 
-  # Environment file for API keys (will need to be created manually)
+  # Environment file for API keys (optional - service works without it)
+  # The "-" prefix makes the file optional
   systemd.services.homepage-dashboard.serviceConfig = {
-    EnvironmentFile = lib.mkForce "/var/lib/homepage-dashboard/homepage.env";
+    EnvironmentFile = lib.mkForce "-/var/lib/homepage-dashboard/homepage.env";
   };
 
-  # Create directory for environment file
+  # Create directory and empty default environment file
   systemd.tmpfiles.rules = [
     "d /var/lib/homepage-dashboard 0750 homepage homepage -"
+    "f /var/lib/homepage-dashboard/homepage.env 0640 homepage homepage - # Empty by default"
   ];
 
   # Create a placeholder environment file with instructions
