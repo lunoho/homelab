@@ -233,9 +233,9 @@ in
     EnvironmentFile = lib.mkForce "-/var/lib/homepage-dashboard/homepage.env";
   };
 
-  # Add environment variables to disable host validation (we're behind Traefik)
+  # Add environment variables to allow our domain (we're behind Traefik)
   systemd.services.homepage-dashboard.environment = {
-    HOMEPAGE_VAR_ALLOWED_HOSTS = "home.${secrets.domain}";
+    HOMEPAGE_ALLOWED_HOSTS = "home.${secrets.domain}";
   };
 
   # Create directory and empty default environment file
