@@ -235,7 +235,7 @@ in
 
   # Add environment variables to allow our domain (we're behind Traefik)
   systemd.services.homepage-dashboard.environment = {
-    HOMEPAGE_ALLOWED_HOSTS = "home.${secrets.domain}";
+    HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost:8082,127.0.0.1:8082,home.${secrets.domain}";
   };
 
   # Create directory and empty default environment file
