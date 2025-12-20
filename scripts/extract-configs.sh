@@ -15,7 +15,7 @@ echo "Output directory: $OUTPUT_DIR"
 echo ""
 
 # Sonarr
-if [ -f /var/lib/sonarr/.config/NzbDrone/config.xml ]; then
+if sudo test -f /var/lib/sonarr/.config/NzbDrone/config.xml; then
     echo "✓ Extracting Sonarr config..."
     sudo cat /var/lib/sonarr/.config/NzbDrone/config.xml > "$OUTPUT_DIR/sonarr-config.xml"
 else
@@ -23,7 +23,7 @@ else
 fi
 
 # Radarr
-if [ -f /var/lib/radarr/.config/Radarr/config.xml ]; then
+if sudo test -f /var/lib/radarr/.config/Radarr/config.xml; then
     echo "✓ Extracting Radarr config..."
     sudo cat /var/lib/radarr/.config/Radarr/config.xml > "$OUTPUT_DIR/radarr-config.xml"
 else
@@ -31,7 +31,7 @@ else
 fi
 
 # Prowlarr
-if [ -f /var/lib/private/prowlarr/config.xml ]; then
+if sudo test -f /var/lib/private/prowlarr/config.xml; then
     echo "✓ Extracting Prowlarr config..."
     sudo cat /var/lib/private/prowlarr/config.xml > "$OUTPUT_DIR/prowlarr-config.xml"
 else
@@ -39,7 +39,7 @@ else
 fi
 
 # Bazarr
-if [ -f /var/lib/bazarr/config/config.ini ]; then
+if sudo test -f /var/lib/bazarr/config/config.ini; then
     echo "✓ Extracting Bazarr config..."
     sudo cat /var/lib/bazarr/config/config.ini > "$OUTPUT_DIR/bazarr-config.ini"
 else
@@ -47,7 +47,7 @@ else
 fi
 
 # SABnzbd
-if [ -f /var/lib/sabnzbd/sabnzbd.ini ]; then
+if sudo test -f /var/lib/sabnzbd/sabnzbd.ini; then
     echo "✓ Extracting SABnzbd config..."
     sudo cat /var/lib/sabnzbd/sabnzbd.ini > "$OUTPUT_DIR/sabnzbd.ini"
 else
@@ -55,7 +55,7 @@ else
 fi
 
 # Jellyseerr
-if [ -f /var/lib/private/jellyseerr/settings.json ]; then
+if sudo test -f /var/lib/private/jellyseerr/settings.json; then
     echo "✓ Extracting Jellyseerr config..."
     sudo cat /var/lib/private/jellyseerr/settings.json > "$OUTPUT_DIR/jellyseerr-settings.json"
 else
