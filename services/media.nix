@@ -60,6 +60,14 @@ in
   </LocalNetworkSubnets>
 </NetworkConfiguration>
 NETXML
+
+    # Reset startup wizard if no users exist
+    if [ -f "$CONFIG_DIR/system.xml" ]; then
+      USER_COUNT=$(${pkgs.sqlite}/bin/sqlite3 /var/lib/jellyfin/data/jellyfin.db "SELECT COUNT(*) FROM Users;" 2>/dev/null || echo "0")
+      if [ "$USER_COUNT" = "0" ]; then
+        ${pkgs.gnused}/bin/sed -i 's|<IsStartupWizardCompleted>true</IsStartupWizardCompleted>|<IsStartupWizardCompleted>false</IsStartupWizardCompleted>|' "$CONFIG_DIR/system.xml"
+      fi
+    fi
   '';
 
   # Note: Jellyfin API keys are managed through the UI (Dashboard > API Keys)
