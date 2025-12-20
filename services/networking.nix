@@ -88,6 +88,15 @@ in
     text = ''
       http:
         routers:
+          # Homepage Dashboard
+          homepage:
+            rule: "Host(`home.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: homepage
+            tls:
+              certResolver: letsencrypt
+
           # Traefik Dashboard
           traefik-dashboard:
             rule: "Host(`traefik.${secrets.domain}`)"
@@ -250,6 +259,11 @@ in
             loadBalancer:
               servers:
                 - url: "http://127.0.0.1:8080"
+
+          homepage:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:8082"
     '';
     mode = "0644";
   };
@@ -321,10 +335,11 @@ in
         ];
         
         # DNS rewrites for local domain resolution
+        # Only rewrite subdomains - let bare domain resolve to public IP
         rewrites = [
           {
             domain = "*.${secrets.domain}";
-            answer = config.networking.primaryIPAddress or "192.168.1.5";
+            answer = "192.168.1.5";
           }
         ];
       };
