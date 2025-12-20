@@ -60,7 +60,6 @@ in
   </LocalNetworkSubnets>
 </NetworkConfiguration>
 NETXML
-    chown media:media "$CONFIG_DIR/network.xml"
   '';
 
   # Note: Jellyfin API keys are managed through the UI (Dashboard > API Keys)
