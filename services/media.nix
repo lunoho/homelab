@@ -130,10 +130,10 @@ NETXML
 
   # Declaratively set API key in config
   systemd.services.bazarr.preStart = ''
-    CONFIG_FILE="/var/lib/bazarr/config/config.ini"
+    CONFIG_FILE="/var/lib/bazarr/config/config.yaml"
     if [ -f "$CONFIG_FILE" ]; then
-      # Update existing API key in INI format
-      ${pkgs.gnused}/bin/sed -i 's|^apikey = .*|apikey = ${secrets.apiKeys.bazarr}|' "$CONFIG_FILE"
+      # Update existing API key in YAML format
+      ${pkgs.gnused}/bin/sed -i 's|^  apikey:.*|  apikey: ${secrets.apiKeys.bazarr}|' "$CONFIG_FILE"
     fi
   '';
 

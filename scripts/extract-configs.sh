@@ -39,9 +39,9 @@ else
 fi
 
 # Bazarr
-if sudo test -f /var/lib/bazarr/config/config.ini; then
+if sudo test -f /var/lib/bazarr/config/config.yaml; then
     echo "✓ Extracting Bazarr config..."
-    sudo cat /var/lib/bazarr/config/config.ini > "$OUTPUT_DIR/bazarr-config.ini"
+    sudo cat /var/lib/bazarr/config/config.yaml > "$OUTPUT_DIR/bazarr-config.yaml"
 else
     echo "✗ Bazarr config not found (setup not complete?)"
 fi
