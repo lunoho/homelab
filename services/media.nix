@@ -28,6 +28,7 @@ in
     "d /var/lib/media/usenet 0755 media media -"
     "d /var/lib/media/usenet/completed 0755 media media -"
     "d /var/lib/media/usenet/incomplete 0755 media media -"
+    "Z /var/lib/sabnzbd 0755 media media -"
   ];
 
   # ===================
@@ -141,6 +142,8 @@ in
   services.sabnzbd = {
     enable = true;
     openFirewall = false; # Use Traefik for external access
+    user = "media";
+    group = "media";
   };
 
   # Declaratively set API key and host whitelist in config
