@@ -24,7 +24,7 @@ git checkout -b feature/add-jellyfin
 # Edit NixOS configuration
 vim configuration.nix
 # OR edit modular files
-vim services/media.nix
+vim services/media/jellyfin.nix
 
 # Commit changes
 git add . && git commit -m "Add Jellyfin media server"
@@ -44,22 +44,23 @@ cd /home/user/homelab
 **Modular Structure:**
 - `configuration.nix` - Main system config, imports all modules
 - `services/` - Individual service modules
-- `secrets.nix` - Domain names, emails, and sensitive config (git-ignored)
+- `services/media/` - Media stack (modular per-service files)
+- `secrets.nix` - Domain names, credentials, API keys (git-ignored)
 - `secrets.nix.example` - Template for secrets file
 - `hardware-configuration.nix` - Auto-generated hardware config
 
 **Adding New Services:**
-1. Create/edit service module (e.g., `services/media.nix`)
-2. Import in `configuration.nix` 
+1. Create/edit service module (e.g., `services/myservice.nix`)
+2. Import in `configuration.nix`
 3. Use `secrets.domain` for domain references, never hardcode domains
 4. Test with `sudo nixos-rebuild test`
 5. Apply with `sudo nixos-rebuild switch`
 
 **Secrets Management:**
-- `secrets.nix` contains actual domain names and emails
+- `secrets.nix` contains domain names, API keys, and credentials
 - Never commit `secrets.nix` to git (it's git-ignored)
 - Use generic domains like `home.domain.com` in committed code
-- Reference secrets via `let secrets = import ../secrets.nix; in`
+- Reference secrets via `let secrets = import /home/user/secrets.nix; in`
 
 ### Deployment Scripts
 
@@ -91,4 +92,60 @@ sudo nixos-rebuild switch --rollback
 git log --oneline  # Find last working commit
 git checkout [commit-hash]
 sudo nixos-rebuild switch
+```
+
+## Media Stack
+
+The media stack is organized in `services/media/` with one file per service:
+
+```
+services/media/
+├── default.nix      # Imports all modules, defines service ordering
+├── common.nix       # Shared media user/group/directories
+├── jellyfin.nix     # Media server
+├── sonarr.nix       # TV series management
+├── radarr.nix       # Movie management
+├── prowlarr.nix     # Indexer management
+├── bazarr.nix       # Subtitle management
+├── jellyseerr.nix   # Request management
+└── sabnzbd.nix      # Usenet downloader
+```
+
+### What's Declarative
+
+These settings are managed in NixOS config and `secrets.nix`:
+- API keys for all services (injected on every boot)
+- SABnzbd usenet servers, categories, download directories
+- Bazarr OpenSubtitles credentials
+- Basic service settings (ports, auth mode, bind addresses)
+
+### What Requires Manual Setup
+
+The *arr apps store most config in SQLite databases. After first deploy:
+- **Jellyfin**: Create users, add media libraries
+- **Jellyseerr**: Run setup wizard (connect Jellyfin, add Sonarr/Radarr)
+- **Sonarr/Radarr**: Add root folders, quality profiles, download client (SABnzbd)
+- **Prowlarr**: Add indexers, sync to Sonarr/Radarr
+- **Bazarr**: Add Sonarr/Radarr connections
+
+State persists in `/var/lib/*` directories between rebuilds.
+
+### secrets.nix Media Fields
+
+```nix
+apiKeys = {
+  sonarr = "...";
+  radarr = "...";
+  prowlarr = "...";
+  bazarr = "...";
+  sabnzbd = "...";
+  jellyfin = "...";
+  jellyseerr = "...";
+};
+
+usenetServers = [
+  { host = "..."; port = 563; username = "..."; password = "..."; connections = 100; priority = 0; }
+];
+
+opensubtitles = { username = "..."; password = "..."; };
 ```
