@@ -24,9 +24,9 @@ analytics:
   enabled: false
 auth:
   apikey: BAZARR_API_KEY_PLACEHOLDER
-  password: ''
+  password: ""
   type: null
-  username: ''
+  username: ""
 backup:
   day: 6
   folder: /var/lib/bazarr/backup
@@ -39,7 +39,7 @@ general:
   adaptive_searching_delta: 1w
   anti_captcha_provider: null
   auto_update: false
-  base_url: ''
+  base_url: ""
   branch: master
   chmod: '0640'
   chmod_enabled: false
@@ -76,7 +76,7 @@ opensubtitlescom:
   username: OPENSUBTITLES_USERNAME_PLACEHOLDER
 radarr:
   apikey: RADARR_API_KEY_PLACEHOLDER
-  base_url: ''
+  base_url: ""
   defer_search_signalr: false
   excluded_tags: []
   full_update: Daily
@@ -92,7 +92,7 @@ radarr:
   use_ffprobe_cache: true
 sonarr:
   apikey: SONARR_API_KEY_PLACEHOLDER
-  base_url: ''
+  base_url: ""
   defer_search_signalr: false
   exclude_season_zero: false
   excluded_series_types: []
