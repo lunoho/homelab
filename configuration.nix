@@ -12,7 +12,7 @@
       ./services/networking.nix
       ./services/ddns.nix
       ./services/monitoring.nix
-      ./services/media.nix
+      ./services/media
       ./services/home-manager.nix
       ./services/homepage.nix
     ];
