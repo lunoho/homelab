@@ -143,12 +143,12 @@ in
     openFirewall = false; # Use Traefik for external access
   };
 
-  # Declaratively set API key in config
+  # Declaratively set API key and host whitelist in config
   systemd.services.sabnzbd.preStart = ''
     CONFIG_FILE="/var/lib/sabnzbd/sabnzbd.ini"
     if [ -f "$CONFIG_FILE" ]; then
-      # Update existing API key
       ${pkgs.gnused}/bin/sed -i 's|^api_key = .*|api_key = ${secrets.apiKeys.sabnzbd}|' "$CONFIG_FILE"
+      ${pkgs.gnused}/bin/sed -i 's|^host_whitelist = .*|host_whitelist = sabnzbd.${secrets.domain}, localhost|' "$CONFIG_FILE"
     fi
   '';
 
