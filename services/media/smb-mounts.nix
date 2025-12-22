@@ -29,6 +29,7 @@ in
       "gid=media"
       "file_mode=0644"
       "dir_mode=0755"
+      "vers=2.0"
       "x-systemd.automount"
       "noauto"
       "_netdev"
