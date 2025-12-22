@@ -12,10 +12,7 @@ in
 
   # SMB credentials file
   environment.etc."smb-credentials/alexandria" = {
-    text = ''
-      username=${secrets.smbCredentials.alexandria.username}
-      password=${secrets.smbCredentials.alexandria.password}
-    '';
+    text = "username=${secrets.smbCredentials.alexandria.username}\npassword=${secrets.smbCredentials.alexandria.password}";
     mode = "0600";
   };
 
