@@ -10,9 +10,12 @@ in
     nssmdns4 = true;
   };
 
-  # SMB credentials file
+  # SMB credentials file (mount.cifs format)
   environment.etc."smb-credentials/alexandria" = {
-    text = "username=${secrets.smbCredentials.alexandria.username}\npassword=${secrets.smbCredentials.alexandria.password}";
+    text = ''
+user=${secrets.smbCredentials.alexandria.username}
+pass=${secrets.smbCredentials.alexandria.password}
+'';
     mode = "0600";
   };
 
