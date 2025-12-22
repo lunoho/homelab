@@ -4,6 +4,12 @@ let
   secrets = import /home/user/secrets.nix;
 in
 {
+  # Enable Avahi for mDNS (.local) resolution
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+  };
+
   # SMB credentials file
   environment.etc."smb-credentials/alexandria" = {
     text = ''
