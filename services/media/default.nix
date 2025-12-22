@@ -3,6 +3,7 @@
 {
   imports = [
     ./common.nix
+    ./smb-mounts.nix
     ./jellyfin.nix
     ./sonarr.nix
     ./radarr.nix
