@@ -26,7 +26,7 @@ in
 
   # Mount unit
   systemd.mounts = [{
-    what = "//alexandria.local/data";
+    what = "//192.168.1.240/data";
     where = "/mnt/alexandria";
     type = "cifs";
     options = "credentials=/etc/smb-credentials/alexandria,uid=media,gid=media,file_mode=0644,dir_mode=0755,vers=2.0";
