@@ -9,24 +9,30 @@
 
 ## Architecture
 
-### Core Infrastructure (NixOS Services)
-- **Reverse Proxy**: Traefik
-- **Security**: fail2ban, firewall
-- **Monitoring**: Prometheus + Grafana
-- **DNS**: blocky or Pi-hole (tbd)
-- **Backup**: Restic + automated snapshots
+### Core Infrastructure (Implemented)
+- **Reverse Proxy**: Traefik (wildcard SSL via Linode DNS)
+- **DNS & Ad-blocking**: AdGuard Home (split DNS for internal services)
+- **Security**: fail2ban, firewall, systemd isolation
+- **Monitoring**: Prometheus + Grafana + Alertmanager (email alerts)
+- **DDNS**: Linode DNS updates every 5 minutes
 
-### Application Services (NixOS Services)
-- **Media**: Jellyfin + *arr suite
+### Application Services (Implemented)
+- **Media Server**: Jellyfin
+- **Media Management**: Sonarr, Radarr, Prowlarr, Bazarr
+- **Media Requests**: Jellyseerr
+- **Usenet**: SABnzbd
+- **Dashboard**: Homepage (with live service widgets)
+
+### Future Services (Planned)
+- **Backup**: Restic + automated snapshots
 - **Cloud**: Nextcloud
 - **Password Management**: Vaultwarden
 - **Home Automation**: Home Assistant
-- **Dashboard**: Homepage or similar
 
 ### Data Storage
 - **System**: NixOS on main drive
-- **Media**: Large storage mount
-- **Backups**: Automated to external storage
+- **Media**: SMB mount at /mnt/alexandria
+- **Service Data**: /var/lib/* directories
 
 ## Getting Started
 
@@ -46,11 +52,29 @@
 ```
 homelab/
 ├── configuration.nix          # Main system config
-├── services/                  # Modular service configurations
-│   ├── networking.nix         # Traefik, DNS, DDNS
-│   ├── monitoring.nix         # Prometheus, Grafana (planned)
-│   └── media.nix              # Jellyfin, *arr suite (planned)
-├── secrets.nix               # Your domains/emails (git-ignored)
+├── hardware-configuration.nix # Auto-generated hardware config
+├── services/
+│   ├── networking.nix         # Traefik, AdGuard Home
+│   ├── monitoring.nix         # Prometheus, Grafana, Alertmanager
+│   ├── ddns.nix               # Linode DDNS updates
+│   ├── homepage.nix           # Dashboard with service widgets
+│   ├── home-manager.nix       # User environment config
+│   └── media/
+│       ├── default.nix        # Media imports and orchestration
+│       ├── common.nix         # Shared user/storage config
+│       ├── smb-mounts.nix     # Network storage mounts
+│       ├── jellyfin.nix       # Media server
+│       ├── sonarr.nix         # TV series management
+│       ├── radarr.nix         # Movie management
+│       ├── prowlarr.nix       # Indexer manager
+│       ├── bazarr.nix         # Subtitle management
+│       ├── jellyseerr.nix     # Request management
+│       └── sabnzbd.nix        # Usenet downloader
+├── scripts/
+│   ├── init-secrets.sh        # Generate initial secrets
+│   ├── extract-configs.sh     # Extract service configs
+│   └── ddns-update.sh         # DDNS update script
+├── secrets.nix               # Your domains/credentials (git-ignored)
 ├── secrets.nix.example       # Template for secrets
 └── rebuild.sh                # Enhanced deployment script
 ```

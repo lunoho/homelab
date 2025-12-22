@@ -15,6 +15,7 @@
       ./services/media
       ./services/home-manager.nix
       ./services/homepage.nix
+      ./services/family-landing.nix
     ];
 
   # ===================

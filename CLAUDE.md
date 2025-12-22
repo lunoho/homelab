@@ -102,6 +102,7 @@ The media stack is organized in `services/media/` with one file per service:
 services/media/
 ├── default.nix      # Imports all modules, defines service ordering
 ├── common.nix       # Shared media user/group/directories
+├── smb-mounts.nix   # Network storage mounts (/mnt/alexandria)
 ├── jellyfin.nix     # Media server
 ├── sonarr.nix       # TV series management
 ├── radarr.nix       # Movie management

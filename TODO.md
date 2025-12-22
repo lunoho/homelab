@@ -1,8 +1,9 @@
 # Homelab TODO
 ## Core Infrastructure
-- [ ] Monitoring: Prometheus + Grafana
-- [X] Internal DNS: AdGuard Home with split DNS for *.domain.com
-- [X] SSL Certificates: ACME with DNS challenges for wildcard certs
+- [x] Monitoring: Prometheus + Grafana + Alertmanager (with email alerts)
+- [x] Internal DNS: AdGuard Home with split DNS for *.domain.com
+- [x] SSL Certificates: ACME with DNS challenges for wildcard certs
+- [x] DDNS: Linode DNS updates every 5 minutes
 - [ ] Backup System: Restic with automated snapshots
 
 ## Application Services (NixOS Services)
@@ -15,17 +16,18 @@
 - [ ] Password Manager: Vaultwarden
 - [ ] Home Automation: Home Assistant
 
-## Declarative Config Templates (Extract from Web UI Setup)
-Complete in this order (based on dependencies):
-- [ ] Complete Prowlarr web UI setup and extract config: `sudo cat /var/lib/private/prowlarr/config.xml`
-- [ ] Complete SABnzbd web UI setup and extract config: `sudo cat /var/lib/sabnzbd/sabnzbd.ini`
-- [ ] Complete Sonarr web UI setup and extract config: `sudo cat /var/lib/sonarr/.config/NzbDrone/config.xml`
-- [ ] Complete Radarr web UI setup and extract config: `sudo cat /var/lib/radarr/.config/Radarr/config.xml`
-- [ ] Complete Jellyfin web UI setup and create API key in secrets.nix
-- [ ] Complete Bazarr web UI setup and extract config: `sudo cat /var/lib/bazarr/config/config.ini`
-- [ ] Complete Jellyseerr web UI setup and extract config: `sudo cat /var/lib/private/jellyseerr/settings.json`
-- [ ] Run `./scripts/extract-configs.sh` to save all configs to ~/config-templates/
-- [ ] Create declarative config templates in services/media.nix based on extracted configs
+## Declarative Config (Completed via preStart scripts)
+API keys and core settings are now declaratively injected on every boot:
+- [x] SABnzbd: Full config including usenet servers, categories, paths
+- [x] Bazarr: OpenSubtitles credentials, Sonarr/Radarr connections
+- [x] Sonarr/Radarr/Prowlarr: API keys injected into config.xml
+- [x] Jellyseerr: API key injected into settings.json
+
+Manual setup still required (state stored in SQLite):
+- [ ] Jellyfin: Create users, add media libraries, generate API key for Homepage
+- [ ] Prowlarr: Add indexers (usenet/torrent)
+- [ ] Sonarr/Radarr: Add root folders, quality profiles, connect to SABnzbd
+- [ ] Jellyseerr: Run setup wizard (connect to Jellyfin, add Sonarr/Radarr)
 
 ## Media Stack Configuration (Post-Deployment)
 - [ ] Configure usenet credentials in SABnzbd
@@ -46,11 +48,11 @@ Complete in this order (based on dependencies):
 - [ ] Investigate additional AdGuard lists and settings
 
 ## Data Storage
-- [ ] Configure additional storage mounts
+- [x] Configure SMB mount at /mnt/alexandria
 - [ ] Document data locations and recovery procedures
 
 ## Documentation & Maintenance
 - [ ] Document service URLs and access methods
-- [ ] Create service status dashboard
-- [ ] Set up monitoring alerts
+- [x] Create service status dashboard (Homepage with widgets)
+- [x] Set up monitoring alerts (Alertmanager with email)
 - [ ] Document rollback procedures

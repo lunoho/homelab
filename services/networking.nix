@@ -105,6 +105,15 @@ in
             tls:
               certResolver: letsencrypt
 
+          # Family Landing Page
+          family:
+            rule: "Host(`family.${secrets.domain}`)"
+            entryPoints:
+              - websecure
+            service: family
+            tls:
+              certResolver: letsencrypt
+
           # Traefik Dashboard
           traefik-dashboard:
             rule: "Host(`traefik.${secrets.domain}`)"
@@ -272,6 +281,11 @@ in
             loadBalancer:
               servers:
                 - url: "http://127.0.0.1:8082"
+
+          family:
+            loadBalancer:
+              servers:
+                - url: "http://127.0.0.1:8083"
     '';
     mode = "0644";
   };
