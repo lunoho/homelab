@@ -19,20 +19,26 @@ in
     mode = "0600";
   };
 
-  # Mount the Synology share
-  fileSystems."/mnt/alexandria" = {
-    device = "//alexandria.local/data";
-    fsType = "cifs";
-    options = [
-      "credentials=/etc/smb-credentials/alexandria"
-      "uid=media"
-      "gid=media"
-      "file_mode=0644"
-      "dir_mode=0755"
-      "vers=2.0"
-      "x-systemd.automount"
-      "noauto"
-      "_netdev"
-    ];
-  };
+  # Create mount point
+  systemd.tmpfiles.rules = [
+    "d /mnt/alexandria 0755 root root -"
+  ];
+
+  # Mount unit
+  systemd.mounts = [{
+    what = "//alexandria.local/data";
+    where = "/mnt/alexandria";
+    type = "cifs";
+    options = "credentials=/etc/smb-credentials/alexandria,uid=media,gid=media,file_mode=0644,dir_mode=0755,vers=2.0";
+    wantedBy = []; # Don't auto-start, let automount trigger it
+  }];
+
+  # Automount unit
+  systemd.automounts = [{
+    where = "/mnt/alexandria";
+    wantedBy = [ "multi-user.target" ];
+    automountConfig = {
+      TimeoutIdleSec = "600";
+    };
+  }];
 }
