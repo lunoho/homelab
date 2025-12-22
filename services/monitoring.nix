@@ -161,7 +161,8 @@ in
   # Download Grafana Dashboards
   systemd.services.grafana-dashboard-setup = {
     description = "Download Grafana dashboards";
-    after = [ "network.target" ];
+    after = [ "network-online.target" "grafana.service" ];
+    wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
@@ -169,27 +170,17 @@ in
       User = "grafana";
     };
     script = ''
-      # System monitoring dashboards
-      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/node-exporter-full.json \
-        "https://grafana.com/api/dashboards/1860/revisions/37/download"
-
-      # PostgreSQL monitoring
-      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/postgres.json \
-        "https://grafana.com/api/dashboards/9628/revisions/8/download"
-
-      # Traefik monitoring
-      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/traefik.json \
-        "https://grafana.com/api/dashboards/4475/revisions/5/download"
-
-      # Prometheus metrics overview
-      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/prometheus-overview.json \
-        "https://grafana.com/api/dashboards/3662/revisions/2/download"
-
-      # System alerting dashboard
-      ${pkgs.curl}/bin/curl -o /var/lib/grafana/dashboards/alerts.json \
-        "https://grafana.com/api/dashboards/13407/revisions/1/download"
-
-      chmod 644 /var/lib/grafana/dashboards/*.json
+      ${pkgs.curl}/bin/curl -fsSL --retry 3 --retry-delay 10 -o /var/lib/grafana/dashboards/node-exporter-full.json \
+        "https://grafana.com/api/dashboards/1860/revisions/37/download" || true
+      ${pkgs.curl}/bin/curl -fsSL --retry 3 --retry-delay 10 -o /var/lib/grafana/dashboards/postgres.json \
+        "https://grafana.com/api/dashboards/9628/revisions/8/download" || true
+      ${pkgs.curl}/bin/curl -fsSL --retry 3 --retry-delay 10 -o /var/lib/grafana/dashboards/traefik.json \
+        "https://grafana.com/api/dashboards/4475/revisions/5/download" || true
+      ${pkgs.curl}/bin/curl -fsSL --retry 3 --retry-delay 10 -o /var/lib/grafana/dashboards/prometheus-overview.json \
+        "https://grafana.com/api/dashboards/3662/revisions/2/download" || true
+      ${pkgs.curl}/bin/curl -fsSL --retry 3 --retry-delay 10 -o /var/lib/grafana/dashboards/alerts.json \
+        "https://grafana.com/api/dashboards/13407/revisions/1/download" || true
+      chmod 644 /var/lib/grafana/dashboards/*.json 2>/dev/null || true
     '';
   };
 
