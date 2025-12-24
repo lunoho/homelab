@@ -44,6 +44,7 @@ cd /home/user/homelab
 **Modular Structure:**
 - `configuration.nix` - Main system config, imports all modules
 - `services/` - Individual service modules
+- `services/storage/` - ZFS storage configuration (vessels pool)
 - `services/media/` - Media stack (modular per-service files)
 - `secrets.nix` - Domain names, credentials, API keys (git-ignored)
 - `secrets.nix.example` - Template for secrets file
@@ -94,6 +95,49 @@ git checkout [commit-hash]
 sudo nixos-rebuild switch
 ```
 
+## Storage
+
+### ZFS Pool: vessels
+
+Primary storage on QNAP TR-004 DAS (4x12TB RAIDZ1, ~36TB usable):
+
+```
+/vessels/
+├── media/              # Replaceable - NO backup needed
+│   ├── movies/
+│   ├── tv/
+│   ├── music/
+│   └── downloads/
+│       ├── incomplete/
+│       └── complete/
+└── akhnaten/           # Critical - backed up
+    ├── photos/
+    └── documents/
+```
+
+**Storage tiers:**
+- `vessels/media/*` - Media files (movies, TV, music). Can be re-downloaded. Owned by `media:media`.
+- `vessels/akhnaten/*` - Critical files (photos, documents). Backed up to alexandria + offsite. Owned by `user:users`.
+
+**Configuration:** `services/storage/zfs.nix`
+- Auto-imports pool on boot
+- Creates datasets via systemd oneshot
+- Monthly scrubs enabled
+- LTS kernel for ZFS stability
+
+### Backup Strategy
+
+| Data | Local Backup | Offsite |
+|------|--------------|---------|
+| `vessels/akhnaten/*` | alexandria (Synology) | TBD (B2 or family site) |
+| `vessels/media/*` | None (replaceable) | None |
+
+### Legacy: alexandria (Synology NAS)
+
+SMB mount at `/mnt/alexandria` - transitioning to backup role:
+- Currently: source for media migration to vessels
+- Future: backup destination for akhnaten
+
 ## Media Stack
 
 The media stack is organized in `services/media/` with one file per service:
@@ -101,8 +145,8 @@ The media stack is organized in `services/media/` with one file per service:
 ```
 services/media/
 ├── default.nix      # Imports all modules, defines service ordering
-├── common.nix       # Shared media user/group/directories
-├── smb-mounts.nix   # Network storage mounts (/mnt/alexandria)
+├── common.nix       # Shared media user/group
+├── smb-mounts.nix   # Legacy NAS mount (/mnt/alexandria)
 ├── jellyfin.nix     # Media server
 ├── sonarr.nix       # TV series management
 ├── radarr.nix       # Movie management
@@ -130,6 +174,10 @@ The *arr apps store most config in SQLite databases. After first deploy:
 - **Bazarr**: Add Sonarr/Radarr connections
 
 State persists in `/var/lib/*` directories between rebuilds.
+
+**Media paths:**
+- Media library: `/vessels/media/{movies,tv,music}`
+- Downloads: `/vessels/media/downloads/{incomplete,complete}`
 
 ### secrets.nix Media Fields
 
