@@ -32,17 +32,25 @@
       RemainAfterExit = true;
     };
     script = ''
+      # Media datasets (replaceable - no backup needed)
       ${pkgs.zfs}/bin/zfs list vessels/media || ${pkgs.zfs}/bin/zfs create vessels/media
       ${pkgs.zfs}/bin/zfs list vessels/media/movies || ${pkgs.zfs}/bin/zfs create vessels/media/movies
       ${pkgs.zfs}/bin/zfs list vessels/media/tv || ${pkgs.zfs}/bin/zfs create vessels/media/tv
       ${pkgs.zfs}/bin/zfs list vessels/media/music || ${pkgs.zfs}/bin/zfs create vessels/media/music
       ${pkgs.zfs}/bin/zfs list vessels/media/downloads || ${pkgs.zfs}/bin/zfs create vessels/media/downloads
 
+      # Critical datasets (backed up to alexandria + offsite)
+      ${pkgs.zfs}/bin/zfs list vessels/akhnaten || ${pkgs.zfs}/bin/zfs create vessels/akhnaten
+      ${pkgs.zfs}/bin/zfs list vessels/akhnaten/photos || ${pkgs.zfs}/bin/zfs create vessels/akhnaten/photos
+      ${pkgs.zfs}/bin/zfs list vessels/akhnaten/documents || ${pkgs.zfs}/bin/zfs create vessels/akhnaten/documents
+
       # Create download subdirectories
       mkdir -p /vessels/media/downloads/{incomplete,complete}
 
-      # Ensure media user owns the datasets
+      # Ensure media user owns media datasets
       chown -R media:media /vessels/media
+      # User owns critical datasets
+      chown -R user:users /vessels/akhnaten
     '';
   };
 
