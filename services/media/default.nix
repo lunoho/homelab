@@ -3,7 +3,7 @@
 {
   imports = [
     ./common.nix
-    ./smb-mounts.nix
+    ./smb-mounts.nix  # Keep for migration from alexandria
     ./jellyfin.nix
     ./sonarr.nix
     ./radarr.nix

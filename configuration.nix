@@ -12,6 +12,7 @@
       ./services/networking.nix
       ./services/ddns.nix
       ./services/monitoring.nix
+      ./services/storage
       ./services/media
       ./services/home-manager.nix
       ./services/homepage.nix
@@ -23,7 +24,7 @@
   # ===================
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages;  # LTS for ZFS stability
 
   system.stateVersion = "25.05"; # do *not* change this
 
