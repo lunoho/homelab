@@ -103,27 +103,28 @@ Primary storage on QNAP TR-004 DAS (4x12TB RAIDZ1, ~36TB usable):
 
 ```
 /vessels/
-├── media/              # Replaceable - NO backup needed
+├── media/              # Single dataset with folders (enables instant moves/hardlinks)
 │   ├── movies/
 │   ├── tv/
 │   ├── music/
 │   └── downloads/
 │       ├── incomplete/
-│       └── complete/
-└── akhnaten/           # Critical - backed up
+│       └── completed/
+└── akhnaten/           # Separate datasets - backed up
     ├── photos/
     └── documents/
 ```
 
 **Storage tiers:**
-- `vessels/media/*` - Media files (movies, TV, music). Can be re-downloaded. Owned by `media:media`.
-- `vessels/akhnaten/*` - Critical files (photos, documents). Backed up to alexandria + offsite. Owned by `user:users`.
+- `vessels/media` - Single dataset for all media. Folder structure enables *arr apps to hardlink/instant-move. Owned by `media:media`.
+- `vessels/akhnaten/*` - Separate child datasets for critical files. Backed up to alexandria + offsite. Owned by `user:users`.
 
 **Configuration:** `services/storage/zfs.nix`
 - Auto-imports pool on boot
-- Creates datasets via systemd oneshot
+- Creates datasets and folders via systemd oneshot
 - Monthly scrubs enabled
 - LTS kernel for ZFS stability
+- Use Thunderbolt-rated USB-C cable for TR-004 (required for stability)
 
 ### Backup Strategy
 
