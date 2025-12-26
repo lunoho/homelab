@@ -109,7 +109,7 @@ Primary storage on QNAP TR-004 DAS (4x12TB RAIDZ1, ~36TB usable):
 │   ├── music/
 │   └── downloads/
 │       ├── incomplete/
-│       └── completed/
+│       └── complete/
 └── akhnaten/           # Separate datasets - backed up
     ├── photos/
     └── documents/

@@ -35,7 +35,7 @@
       # Media - single dataset with folder structure (enables instant moves/hardlinks)
       ${pkgs.zfs}/bin/zfs list vessels/media || ${pkgs.zfs}/bin/zfs create vessels/media
       mkdir -p /vessels/media/{movies,tv,music,downloads}
-      mkdir -p /vessels/media/downloads/{incomplete,completed}
+      mkdir -p /vessels/media/downloads/{incomplete,complete}
 
       # Critical datasets (backed up to alexandria + offsite)
       ${pkgs.zfs}/bin/zfs list vessels/akhnaten || ${pkgs.zfs}/bin/zfs create vessels/akhnaten
