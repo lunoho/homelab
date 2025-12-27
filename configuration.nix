@@ -25,6 +25,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages;  # LTS for ZFS stability
+  boot.kernelParams = [ "zfs.zfs_arc_max=4294967296" ];  # Limit ARC to 4GB (prevents memory starvation)
 
   # Swap for memory pressure relief (prevents freezes under heavy load)
   swapDevices = [{
