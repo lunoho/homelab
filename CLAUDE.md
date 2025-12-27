@@ -133,11 +133,11 @@ Primary storage on QNAP TR-004 DAS (4x12TB RAIDZ1, ~36TB usable):
 | `vessels/akhnaten/*` | alexandria (Synology) | TBD (B2 or family site) |
 | `vessels/media/*` | None (replaceable) | None |
 
-### Legacy: alexandria (Synology NAS)
+### alexandria (Synology NAS)
 
-SMB mount at `/mnt/alexandria` - transitioning to backup role:
-- Currently: source for media migration to vessels
-- Future: backup destination for akhnaten
+SMB mount at `/mnt/alexandria` - backup destination:
+- Backup target for `vessels/akhnaten` (critical files)
+- Can be powered off when not in use
 
 ## Media Stack
 
