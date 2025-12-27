@@ -124,11 +124,11 @@ Primary storage on QNAP TR-004 DAS (4x12TB RAIDZ1, ~36TB usable):
 - Creates datasets and folders via systemd oneshot
 - Monthly scrubs enabled
 - LTS kernel for ZFS stability
-- Use Thunderbolt-rated USB-C cable for TR-004 (required for stability)
 
 **Known Issues & Workarounds:**
-- **UAS disabled for TR-004**: The USB Attached SCSI (UAS) driver causes kernel panics under heavy I/O (e.g., SABnzbd downloads at full speed). Disabled via `usb-storage.quirks=1c04:e014:u` kernel parameter, which forces the slower but stable BOT (Bulk-Only Transport) mode. This is a NUC USB controller limitation, not a TR-004 defect.
-- **ZFS ARC limited to 4GB**: On the 8GB NUC, ZFS was allowed to use 6.6GB for caching, starving applications. Limited to 4GB via `zfs.zfs_arc_max` kernel parameter. Increase if RAM is upgraded.
+- **Use USB-A port, NOT USB-C/Thunderbolt**: The NUC7i3BNH's Alpine Ridge Thunderbolt controller crashes under sustained write I/O (xHCI dies with "host controller not responding, assume dead"). This is a [known Intel NUC issue](https://bugzilla.redhat.com/show_bug.cgi?id=1674263). Connect TR-004 to a USB-A port using a USB-C to USB-A cable - the PCH's USB controller (0000:00:14.0) is stable. Reads work fine on USB-C; only heavy writes crash it.
+- **ZFS ARC limited to 4GB**: On the 8GB NUC, ZFS was consuming 6.6GB for caching, starving applications. Limited to 4GB via `zfs.zfs_arc_max` kernel parameter. Increase if RAM is upgraded.
+- **8GB swap configured**: Prevents OOM kills and system freezes under memory pressure.
 
 ### Backup Strategy
 
