@@ -29,15 +29,6 @@
   # Kernel parameters for system stability
   boot.kernelParams = [
     "zfs.zfs_arc_max=4294967296"  # Limit ARC to 4GB (8GB system needs room for apps)
-    # Disable UAS for QNAP TR-004 (USB ID 1c04:e014) - forces stable BOT mode
-    # UAS caused kernel panics under heavy I/O (SABnzbd downloads). Slightly slower
-    # but prevents system freezes. Remove this if upgrading to Thunderbolt DAS.
-    "usb-storage.quirks=1c04:e014:u"
-    # DEBUG: Testing if power management causes USB controller crashes under heavy I/O.
-    # The xHCI controller was dying with "Unable to change power state from D3hot to D0".
-    # TODO: Remove these once root cause is identified - they reduce power efficiency.
-    "pcie_aspm=off"           # Disable PCIe Active State Power Management
-    "usbcore.autosuspend=-1"  # Disable USB autosuspend
   ];
 
   # Swap for memory pressure relief (prevents freezes under heavy load)
