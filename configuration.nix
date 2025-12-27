@@ -26,6 +26,12 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages;  # LTS for ZFS stability
 
+  # Swap for memory pressure relief (prevents freezes under heavy load)
+  swapDevices = [{
+    device = "/swapfile";
+    size = 8 * 1024;  # 8GB
+  }];
+
   system.stateVersion = "25.05"; # do *not* change this
 
   # ===================
