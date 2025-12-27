@@ -25,7 +25,15 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages;  # LTS for ZFS stability
-  boot.kernelParams = [ "zfs.zfs_arc_max=4294967296" ];  # Limit ARC to 4GB (prevents memory starvation)
+
+  # Kernel parameters for system stability
+  boot.kernelParams = [
+    "zfs.zfs_arc_max=4294967296"  # Limit ARC to 4GB (8GB system needs room for apps)
+    # Disable UAS for QNAP TR-004 (USB ID 1c04:e014) - forces stable BOT mode
+    # UAS caused kernel panics under heavy I/O (SABnzbd downloads). Slightly slower
+    # but prevents system freezes. Remove this if upgrading to Thunderbolt DAS.
+    "usb-storage.quirks=1c04:e014:u"
+  ];
 
   # Swap for memory pressure relief (prevents freezes under heavy load)
   swapDevices = [{

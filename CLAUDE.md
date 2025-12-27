@@ -126,6 +126,10 @@ Primary storage on QNAP TR-004 DAS (4x12TB RAIDZ1, ~36TB usable):
 - LTS kernel for ZFS stability
 - Use Thunderbolt-rated USB-C cable for TR-004 (required for stability)
 
+**Known Issues & Workarounds:**
+- **UAS disabled for TR-004**: The USB Attached SCSI (UAS) driver causes kernel panics under heavy I/O (e.g., SABnzbd downloads at full speed). Disabled via `usb-storage.quirks=1c04:e014:u` kernel parameter, which forces the slower but stable BOT (Bulk-Only Transport) mode. This is a NUC USB controller limitation, not a TR-004 defect.
+- **ZFS ARC limited to 4GB**: On the 8GB NUC, ZFS was allowed to use 6.6GB for caching, starving applications. Limited to 4GB via `zfs.zfs_arc_max` kernel parameter. Increase if RAM is upgraded.
+
 ### Backup Strategy
 
 | Data | Local Backup | Offsite |
