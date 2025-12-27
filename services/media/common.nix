@@ -4,8 +4,8 @@
   # ===================
   # SHARED MEDIA USER & STORAGE
   # ===================
-  # Media stored on ZFS pool "vessels" mounted at /vessels
-  # Datasets: vessels/media/{movies,tv,music,downloads}
+  # Media stored on ZFS pool "vessels" at /vessels/media
+  # Single dataset with folders: movies, tv, music, downloads
 
   users.groups.media = {};
   users.users.media = {
